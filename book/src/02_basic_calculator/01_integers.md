@@ -1,49 +1,46 @@
-# Types, part 1
+# 类型（Types），第一部分
 
-In the ["Syntax" section](../01_intro/01_syntax.md) `compute`'s input parameters were of type `u32`.\
-Let's unpack what that _means_.
+在["语法"章节](../01_intro/01_syntax.md)中，`compute` 的输入参数类型为 `u32`。\
+让我们来详细解释一下这_意味着_什么。
 
-## Primitive types
+## 基本类型（Primitive types）
 
-`u32` is one of Rust's **primitive types**. Primitive types are the most basic building blocks of a language.
-They're built into the language itself—i.e. they are not defined in terms of other types.
+`u32` 是 Rust 的**基本类型（primitive types）**之一。基本类型是语言中最基础的构建块。
+它们内置于语言本身——也就是说，它们不是用其他类型来定义的。
 
-You can combine these primitive types to create more complex types. We'll see how soon enough.
+你可以组合这些基本类型来创建更复杂的类型。我们很快就会看到如何做到这一点。
 
-## Integers
+## 整数（Integers）
 
-`u32`, in particular, is an **unsigned 32-bit integer**.
+`u32` 特别地，是一个**无符号 32 位整数（unsigned 32-bit integer）**。
 
-An integer is a number that can be written without a fractional component. E.g. `1` is an integer, while `1.2` is not.
+整数（integer）是一个可以不带小数部分书写的数字。例如 `1` 是一个整数，而 `1.2` 不是。
 
-### Signed vs. unsigned
+### 有符号（Signed）vs. 无符号（Unsigned）
 
-An integer can be **signed** or **unsigned**.\
-An unsigned integer can only represent non-negative numbers (i.e. `0` or greater).
-A signed integer can represent both positive and negative numbers (e.g. `-1`, `12`, etc.).
+整数可以是**有符号（signed）**或**无符号（unsigned）**的。\
+无符号整数只能表示非负数（即 `0` 或更大的数）。
+有符号整数可以表示正数和负数（例如 `-1`、`12` 等）。
 
-The `u` in `u32` stands for **unsigned**.\
-The equivalent type for signed integer is `i32`, where the `i` stands for integer (i.e. any integer, positive or
-negative).
+`u32` 中的 `u` 代表**无符号（unsigned）**。\
+有符号整数的等效类型是 `i32`，其中 `i` 代表整数（integer），即可以是正数或负数的任何整数。
 
-### Bit width
+### 位宽（Bit width）
 
-The `32` in `u32` refers to the **number of bits[^bit]** used to represent the number in memory.\
-The more bits, the larger the range of numbers that can be represented.
+`u32` 中的 `32` 指的是用于在内存中表示数字的**位数[^bit]**。\
+位数越多，能表示的数字范围就越大。
 
-Rust supports multiple bit widths for integers: `8`, `16`, `32`, `64`, `128`.
+Rust 支持多种位宽的整数：`8`、`16`、`32`、`64`、`128`。
 
-With 32 bits, `u32` can represent numbers from `0` to `2^32 - 1` (a.k.a. [`u32::MAX`](https://doc.rust-lang.org/std/primitive.u32.html#associatedconstant.MAX)).\
-With the same number of bits, a signed integer (`i32`) can represent numbers from `-2^31` to `2^31 - 1`
-(i.e. from [`i32::MIN`](https://doc.rust-lang.org/std/primitive.i32.html#associatedconstant.MIN)
-to [`i32::MAX`](https://doc.rust-lang.org/std/primitive.i32.html#associatedconstant.MAX)).\
-The maximum value for `i32` is smaller than the maximum value for `u32` because one bit is used to represent
-the sign of the number. Check out the [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement)
-representation for more details on how signed integers are represented in memory.
+使用 32 位，`u32` 可以表示从 `0` 到 `2^32 - 1` 的数字（也称为 [`u32::MAX`](https://doc.rust-lang.org/std/primitive.u32.html#associatedconstant.MAX)）。\
+使用相同数量的位数，有符号整数（`i32`）可以表示从 `-2^31` 到 `2^31 - 1` 的数字
+（即从 [`i32::MIN`](https://doc.rust-lang.org/std/primitive.i32.html#associatedconstant.MIN)
+到 [`i32::MAX`](https://doc.rust-lang.org/std/primitive.i32.html#associatedconstant.MAX)）。\
+`i32` 的最大值小于 `u32` 的最大值，因为有一位用于表示数字的符号。查看[二进制补码](https://en.wikipedia.org/wiki/Two%27s_complement)表示法了解更多关于有符号整数在内存中表示方式的详细信息。
 
-### Summary
+### 总结
 
-Combining the two variables (signed/unsigned and bit width), we get the following integer types:
+结合两个变量（有符号/无符号和位宽），我们得到以下整数类型：
 
 | Bit width | Signed | Unsigned |
 | --------- | ------ | -------- |
@@ -53,59 +50,56 @@ Combining the two variables (signed/unsigned and bit width), we get the followin
 | 64-bit    | `i64`  | `u64`    |
 | 128-bit   | `i128` | `u128`   |
 
-## Literals
+## 字面量（Literals）
 
-A **literal** is a notation for representing a fixed value in source code.\
-For example, `42` is a Rust literal for the number forty-two.
+**字面量（literal）** 是在源代码中表示固定值的记号。\
+例如，`42` 是表示数字四十二的 Rust 字面量。
 
-### Type annotations for literals
+### 字面量的类型注解
 
-But all values in Rust have a type, so... what's the type of `42`?
+但是 Rust 中的所有值都有类型，那么... `42` 的类型是什么？
 
-The Rust compiler will try to infer the type of a literal based on how it's used.\
-If you don't provide any context, the compiler will default to `i32` for integer literals.\
-If you want to use a different type, you can add the desired integer type as a suffix—e.g. `2u64` is a 2 that's
-explicitly typed as a `u64`.
+Rust 编译器会尝试根据字面量的使用方式来推断其类型。\
+如果你不提供任何上下文，编译器会将整数字面量默认为 `i32`。\
+如果你想使用不同的类型，你可以添加所需的整数类型作为后缀——例如，`2u64` 就是一个显式类型为 `u64` 的 2。
 
-### Underscores in literals
+### 字面量中的下划线
 
-You can use underscores `_` to improve the readability of large numbers.\
-For example, `1_000_000` is the same as `1000000`.
+你可以使用下划线 `_` 来提高大数字的可读性。\
+例如，`1_000_000` 与 `1000000` 相同。
 
-## Arithmetic operators
+## 算术运算符（Arithmetic operators）
 
-Rust supports the following arithmetic operators[^traits] for integers:
+Rust 支持以下整数的算术运算符[^traits]：
 
-- `+` for addition
-- `-` for subtraction
-- `*` for multiplication
-- `/` for division
-- `%` for remainder
+- `+` 加法（addition）
+- `-` 减法（subtraction）
+- `*` 乘法（multiplication）
+- `/` 除法（division）
+- `%` 取余（remainder）
 
-Precedence and associativity rules for these operators are the same as in mathematics.\
-You can use parentheses to override the default precedence. E.g. `2 * (3 + 4)`.
+这些运算符的优先级和结合性与数学中的相同。\
+你可以使用括号来覆盖默认的优先级。例如 `2 * (3 + 4)`。
 
-> ⚠️ **Warning**
+> ⚠️ **警告（Warning）**
 >
-> The division operator `/` performs integer division when used with integer types.
-> I.e. the result is truncated towards zero. For example, `5 / 2` is `2`, not `2.5`.
+> 除法运算符 `/` 在用于整数类型时执行整数除法。
+> 也就是说，结果会向零截断。例如，`5 / 2` 是 `2`，而不是 `2.5`。
 
-## No automatic type coercion
+## 无自动类型强制转换（No automatic type coercion）
 
-As we discussed in the previous exercise, Rust is a statically typed language.\
-In particular, Rust is quite strict about type coercion. It won't automatically convert a value from one type to
-another[^coercion],
-even if the conversion is lossless. You have to do it explicitly.
+正如我们在上一个练习中讨论的，Rust 是一种静态类型语言。\
+特别是，Rust 对类型强制转换非常严格。它不会自动将值从一种类型转换为另一种类型[^coercion]，
+即使转换是无损的。你必须显式地进行转换。
 
-For example, you can't assign a `u8` value to a variable with type `u32`, even though all `u8` values are valid `u32`
-values:
+例如，你不能将 `u8` 值赋给类型为 `u32` 的变量，即使所有 `u8` 值都是有效的 `u32` 值：
 
 ```rust
 let b: u8 = 100;
 let a: u32 = b;
 ```
 
-It'll throw a compilation error:
+它会抛出编译错误：
 
 ```text
 error[E0308]: mismatched types
@@ -117,18 +111,18 @@ error[E0308]: mismatched types
   |
 ```
 
-We'll see how to convert between types [later in this course](../04_traits/09_from.md).
+我们将在本课程的[后面部分](../04_traits/09_from.md)看到如何在类型之间进行转换。
 
-## Further reading
+## 延伸阅读（Further reading）
 
-- [The integer types section](https://doc.rust-lang.org/book/ch03-02-data-types.html#integer-types) in the official Rust book
+- [Rust 官方书籍中的整数类型章节](https://doc.rust-lang.org/book/ch03-02-data-types.html#integer-types)
 
-[^bit]: A bit is the smallest unit of data in a computer. It can only have two values: `0` or `1`.
+[^bit]: 位（bit）是计算机中最小的数据单位。它只能有两个值：`0` 或 `1`。
 
-[^traits]: Rust doesn't let you define custom operators, but it puts you in control of how the built-in operators
-behave.
-We'll talk about operator overloading [later in the course](../04_traits/03_operator_overloading.md), after we've covered traits.
+[^traits]: Rust 不允许你定义自定义运算符，但它让你控制内置运算符的行为。
+我们将在课程中[稍后讨论运算符重载](../04_traits/03_operator_overloading.md)，在我们介绍了特质（trait）之后。
 
-[^coercion]: There are some exceptions to this rule, mostly related to references, smart pointers and ergonomics. We'll
-cover those [later on](../04_traits/07_deref.md).
-A mental model of "all conversions are explicit" will serve you well in the meantime.
+[^coercion]: 这个规则有一些例外，主要与引用、智能指针和人体工程学有关。我们将在[稍后介绍](../04_traits/07_deref.md)。
+"所有转换都是显式的"这个心理模型在现阶段会对你很有帮助。
+
+> 原文链接：[Types, part 1](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/02_basic_calculator/01_integers.md)
