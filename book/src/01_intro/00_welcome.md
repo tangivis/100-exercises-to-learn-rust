@@ -34,7 +34,7 @@
 
 ## 格式
 
-你可以[在浏览器中](https://rust-exercises.com/100-exercises/)浏览课程材料，
+你可以[在浏览器中](https://100.rust-roof.top)浏览课程中文材料，
 或[下载PDF文件](https://rust-exercises.com/100-exercises-to-learn-rust.pdf)离线阅读。
 如果你喜欢打印版本，可以[在亚马逊购买纸质书](https://www.amazon.com/dp/B0DJ14KQQG/)。
 
