@@ -19,4 +19,4 @@
 
 ### 3. 翻译进度管理
 - 翻译完成后更新进度 checklist
-- 在 README 或专门的进度文档(TRANSLATION-PROGRESS.md)中维护翻译状态
+- 在 README.md中维护翻译进度状态
