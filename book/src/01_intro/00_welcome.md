@@ -115,3 +115,5 @@ Luca 是 ["Zero to Production in Rust"](https://zero2prod.com) 的作者，
 > 中文翻译：[tom]
 > 本翻译版本遵循 CC BY-NC 4.0 许可证，仅供非商业用途使用。
 > 原作者和所有链接均已保留。
+>
+> 📖 **原文链接**: [https://rust-exercises.com/100-exercises/01_intro/00_welcome](https://rust-exercises.com/100-exercises/01_intro/00_welcome)

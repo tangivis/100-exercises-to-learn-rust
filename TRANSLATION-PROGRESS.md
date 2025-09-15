@@ -21,9 +21,8 @@
 - [ ] ⏸️ book/src/SUMMARY.md
 
 ### 第1章：基础
-- [ ] ⏸️ 01_intro/00_welcome.md
-- [ ] ⏸️ 01_intro/01_syntax.md
-- [ ] ⏸️ 01_intro/02_basic_calculator.md
+- [x] ✅ 01_intro/00_welcome.md
+- [x] ✅ 01_intro/01_syntax.md
 
 ### 第2章：变量
 - [ ] ⏸️ 02_basic_calculator/00_intro.md
