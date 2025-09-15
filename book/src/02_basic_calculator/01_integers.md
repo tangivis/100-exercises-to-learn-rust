@@ -125,4 +125,4 @@ error[E0308]: mismatched types
 [^coercion]: 这个规则有一些例外，主要与引用、智能指针和人体工程学有关。我们将在[稍后介绍](../04_traits/07_deref.md)。
 "所有转换都是显式的"这个心理模型在现阶段会对你很有帮助。
 
-> 原文链接：[Types, part 1](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/02_basic_calculator/01_integers.md)
+> 📖 **原文链接**: [https://rust-exercises.com/100-exercises/02_basic_calculator/01_integers](https://rust-exercises.com/100-exercises/02_basic_calculator/01_integers)
