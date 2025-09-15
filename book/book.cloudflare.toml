@@ -7,7 +7,7 @@ title = "100 Exercises To Learn Rust"
 
 # Preprocessors disabled for Cloudflare Pages deployment
 # [preprocessor.exercise-linker]
-# exercise_root_url = "https://github.com/mainmatter/100-exercises-to-learn-rust/tree/main/exercises"
+# exercise_root_url = "https://github.com/tangivis/100-exercises-to-learn-rust/tree/main/exercises"
 
 # [preprocessor.link-shortener]
 # base_url = "https://ruex.io"
@@ -17,7 +17,7 @@ title = "100 Exercises To Learn Rust"
 # after = ["exercise-linker"]
 
 [output.html]
-git-repository-url = "https://github.com/mainmatter/100-exercises-to-learn-rust"
+git-repository-url = "https://github.com/tangivis/100-exercises-to-learn-rust"
 
 [output.html.playground]
 runnable = false
