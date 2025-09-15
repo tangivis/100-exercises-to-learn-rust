@@ -1,7 +1,7 @@
 # 欢迎
 
 > 🌏 **中文版说明**
-> 本书正在翻译中，当前进度约 5%。访问 [zh100.rust.edu.kg](https://zh100.rust.edu.kg) 查看最新中文版。
+> 本书正在翻译中，当前进度约 5%。访问 [100.rust-roof.top](https://100.rust-roof.top) 查看最新中文版。
 > 英文原版请访问 [rust-exercises.com](https://rust-exercises.com)。
 > 翻译问题请提交到 [GitHub Issues](https://github.com/tangivis/100-exercises-to-learn-rust/issues)。
 
