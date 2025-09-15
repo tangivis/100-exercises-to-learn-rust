@@ -25,7 +25,7 @@
 - [x] ✅ 01_intro/01_syntax.md
 
 ### 第2章：变量
-- [ ] ⏸️ 02_basic_calculator/00_intro.md
+- [x] ✅ 02_basic_calculator/00_intro.md
 - [ ] ⏸️ 02_basic_calculator/01_integers.md
 - [ ] ⏸️ 02_basic_calculator/02_variables.md
 
