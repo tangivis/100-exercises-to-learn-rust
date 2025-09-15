@@ -1,110 +1,117 @@
-# Welcome
+# 欢迎
 
-Welcome to **"100 Exercises To Learn Rust"**!
+> 🌏 **中文版说明**
+> 本书正在翻译中，当前进度约 5%。访问 [zh100.rust.edu.kg](https://zh100.rust.edu.kg) 查看最新中文版。
+> 英文原版请访问 [rust-exercises.com](https://rust-exercises.com)。
+> 翻译问题请提交到 [GitHub Issues](https://github.com/tangivis/100-exercises-to-learn-rust/issues)。
 
-This course will teach you Rust's core concepts, one exercise at a time.\
-You'll learn about Rust's syntax, its type system, its standard library, and its ecosystem.
+欢迎来到 **"100个Rust练习"**！
 
-We don't assume any prior knowledge of Rust, but we assume you know at least
-another programming language.
-We also don't assume any prior knowledge of systems programming or memory management. Those
-topics will be covered in the course.
+本课程将通过一个个练习，教你Rust的核心概念。
+你将学习Rust的语法、类型系统、标准库和生态系统。
 
-In other words, we'll be starting from scratch!\
-You'll build up your Rust knowledge in small, manageable steps.
-By the end of the course, you will have solved ~100 exercises, enough to
-feel comfortable working on small to medium-sized Rust projects.
+我们不假设你有任何Rust的先验知识，但假设你至少了解另一种编程语言。
+我们也不假设你有系统编程或内存管理的先验知识。这些主题将在课程中介绍。
 
-## Methodology
+换句话说，我们将从零开始！
+你将以小而易管理的步骤逐步建立你的Rust知识。
+课程结束时，你将完成约100个练习，足以让你在中小型Rust项目中感到舒适。
 
-This course is based on the "learn by doing" principle.\
-It has been designed to be interactive and hands-on.
+## 方法论
 
-[Mainmatter](https://mainmatter.com/rust-consulting/) developed this course
-to be delivered in a classroom setting, over 4 days: each attendee advances
-through the lessons at their own pace, with an experienced instructor providing
-guidance, answering questions and diving deeper into the topics as needed.\
-You can sign up for the next tutored session on [our website](https://ti.to/mainmatter/rust-from-scratch-jan-2025).
-If you'd like to organise a private session for your company, please [get in touch](https://mainmatter.com/contact/).
+本课程基于"做中学"的原则。
+它被设计为互动式和实践性的。
 
-You can also take the courses on your own, but we recommend you find a friend or
-a mentor to help you along the way should you get stuck. You can
-find solutions for all exercises in the
-[`solutions` branch of the GitHub repository](https://github.com/mainmatter/100-exercises-to-learn-rust/tree/solutions).
+[Mainmatter](https://mainmatter.com/rust-consulting/) 开发了这门课程，
+用于在课堂环境中授课，为期4天：每位学员按自己的节奏推进课程，
+经验丰富的讲师提供指导，回答问题并根据需要深入探讨主题。
+你可以在[我们的网站](https://ti.to/mainmatter/rust-from-scratch-jan-2025)上报名参加下一期辅导课程。
+如果你想为你的公司组织私人课程，请[联系我们](https://mainmatter.com/contact/)。
 
-## Formats
+你也可以自学这门课程，但我们建议你找一个朋友或导师在你遇到困难时帮助你。
+你可以在[GitHub仓库的`solutions`分支](https://github.com/mainmatter/100-exercises-to-learn-rust/tree/solutions)
+中找到所有练习的解决方案。
 
-You can go through the course material [in the browser](https://rust-exercises.com/100-exercises/) or [download it as a PDF file](https://rust-exercises.com/100-exercises-to-learn-rust.pdf), for offline reading.\
-If you prefer to have the course material printed out, [buy a paperback copy on Amazon](https://www.amazon.com/dp/B0DJ14KQQG/).
+## 格式
 
-## Structure
+你可以[在浏览器中](https://rust-exercises.com/100-exercises/)浏览课程材料，
+或[下载PDF文件](https://rust-exercises.com/100-exercises-to-learn-rust.pdf)离线阅读。
+如果你喜欢打印版本，可以[在亚马逊购买纸质书](https://www.amazon.com/dp/B0DJ14KQQG/)。
 
-On the left side of the screen, you can see that the course is divided into sections.
-Each section introduces a new concept or feature of the Rust language.\
-To verify your understanding, each section is paired with an exercise that you need to solve.
+## 结构
 
-You can find the exercises in the
-[companion GitHub repository](https://github.com/mainmatter/100-exercises-to-learn-rust).\
-Before starting the course, make sure to clone the repository to your local machine:
+在屏幕左侧，你可以看到课程分为多个章节。
+每个章节介绍Rust语言的一个新概念或特性。
+为了验证你的理解，每个章节都配有一个需要解决的练习。
+
+你可以在[配套的GitHub仓库](https://github.com/mainmatter/100-exercises-to-learn-rust)中找到练习。
+开始课程之前，请确保将仓库克隆到本地：
 
 ```bash
-# If you have an SSH key set up with GitHub
+# 如果你已经在GitHub上设置了SSH密钥
 git clone git@github.com:mainmatter/100-exercises-to-learn-rust.git
-# Otherwise, use the HTTPS URL:
+# 否则，使用HTTPS URL：
 #   https://github.com/mainmatter/100-exercises-to-learn-rust.git
 ```
 
-We also recommend you work on a branch, so you can easily track your progress and pull
-in updates from the main repository, if needed:
+我们还建议你在一个分支上工作，这样你可以轻松跟踪进度，
+并在需要时从主仓库拉取更新：
 
 ```bash
 cd 100-exercises-to-learn-rust
 git checkout -b my-solutions
 ```
 
-All exercises are located in the `exercises` folder.
-Each exercise is structured as a Rust package.
-The package contains the exercise itself, instructions on what to do (in `src/lib.rs`), and a test suite to
-automatically verify your solution.
+所有练习都位于`exercises`文件夹中。
+每个练习都构建为一个Rust包。
+包中包含练习本身、要做什么的说明（在`src/lib.rs`中），
+以及自动验证你的解决方案的测试套件。
 
-### Tools
+### 工具
 
-To work through this course, you'll need:
+要学习本课程，你需要：
 
-- [**Rust**](https://www.rust-lang.org/tools/install).
-  If `rustup` is already installed on your system, run `rustup update` (or another appropriate command depending on how you installed Rust on your system) to ensure you're running on the latest stable version.
-- _(Optional but recommended)_ An IDE with Rust autocompletion support.
-  We recommend one of the following:
-  - [RustRover](https://www.jetbrains.com/rust/);
-  - [Visual Studio Code](https://code.visualstudio.com) with the [`rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer) extension.
+- [**Rust**](https://www.rust-lang.org/tools/install)。
+  如果系统上已安装`rustup`，运行`rustup update`（或根据你安装Rust的方式使用其他适当的命令）以确保你运行的是最新的稳定版本。
+- _（可选但推荐）_ 支持Rust自动完成的IDE。
+  我们推荐以下之一：
+  - [RustRover](https://www.jetbrains.com/rust/)；
+  - [Visual Studio Code](https://code.visualstudio.com) 配合 [`rust-analyzer`](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer) 扩展。
 
 ### Workshop runner, `wr`
 
-To verify your solutions, we've also provided a tool to guide you through the course: the `wr` CLI, short for "workshop runner".
-Install `wr` by following the instructions on [its website](https://mainmatter.github.io/rust-workshop-runner/).
+为了验证你的解决方案，我们还提供了一个工具来指导你完成课程：`wr` CLI，即"workshop runner"的缩写。
+按照[其网站](https://mainmatter.github.io/rust-workshop-runner/)上的说明安装`wr`。
 
-Once you have `wr` installed, open a new terminal and navigate to the top-level folder of the repository.
-Run the `wr` command to start the course:
+安装`wr`后，打开一个新终端并导航到仓库的顶级文件夹。
+运行`wr`命令开始课程：
 
 ```bash
 wr
 ```
 
-`wr` will verify the solution to the current exercise.\
-Don't move on to the next section until you've solved the exercise for the current one.
+`wr`将验证当前练习的解决方案。
+在解决当前章节的练习之前，不要进入下一章节。
 
-> We recommend committing your solutions to Git as you progress through the course,
-> so you can easily track your progress and "restart" from a known point if needed.
+> 我们建议在课程进展过程中将你的解决方案提交到Git，
+> 这样你可以轻松跟踪进度，并在需要时从已知点"重新开始"。
 
-Enjoy the course!
+享受课程！
 
-## Author
+## 作者
 
-This course was written by [Luca Palmieri](https://www.lpalmieri.com/), Principal Engineering
-Consultant at [Mainmatter](https://mainmatter.com/rust-consulting/).\
-Luca has been working with Rust since 2018, initially at TrueLayer and then at AWS.\
-Luca is the author of ["Zero to Production in Rust"](https://zero2prod.com),
-the go-to resource for learning how to build backend applications in Rust.\
-He is also the author and maintainer of a variety of open-source Rust projects, including
-[`cargo-chef`](https://github.com/LukeMathWalker/cargo-chef),
-[Pavex](https://pavex.dev) and [`wiremock`](https://github.com/LukeMathWalker/wiremock-rs).
+本课程由 [Luca Palmieri](https://www.lpalmieri.com/) 编写，
+他是 [Mainmatter](https://mainmatter.com/rust-consulting/) 的首席工程咨询顾问。
+Luca 自2018年以来一直在使用Rust，最初在TrueLayer，然后在AWS。
+Luca 是 ["Zero to Production in Rust"](https://zero2prod.com) 的作者，
+这是学习如何在Rust中构建后端应用程序的首选资源。
+他还是各种开源Rust项目的作者和维护者，包括
+[`cargo-chef`](https://github.com/LukeMathWalker/cargo-chef)、
+[Pavex](https://pavex.dev) 和 [`wiremock`](https://github.com/LukeMathWalker/wiremock-rs)。
+
+---
+
+> 📝 **翻译说明**
+> 中文翻译：[tom]
+> 本翻译版本遵循 CC BY-NC 4.0 许可证，仅供非商业用途使用。
+> 原作者和所有链接均已保留。
