@@ -1,35 +1,34 @@
-# Syntax
+# 语法(Syntax)
 
 <div class="warning">
 
-Don't jump ahead!\
-Complete the exercise for the previous section before you start this one.\
-It's located in `exercises/01_intro/00_welcome`, in the [course GitHub's repository](https://github.com/mainmatter/100-exercises-to-learn-rust).\
-Use [`wr`](00_welcome.md#wr-the-workshop-runner) to start the course and verify your solutions.
+不要跳过！\
+请先完成上一部分的练习再开始这一部分。\
+练习位于[课程GitHub仓库](https://github.com/mainmatter/100-exercises-to-learn-rust)中的 `exercises/01_intro/00_welcome` 目录。\
+使用[`wr`](00_welcome.md#wr-the-workshop-runner)来开始课程并验证你的解决方案。
 
 </div>
 
-The previous task doesn't even qualify as an exercise, but it already exposed you to quite a bit of Rust **syntax**.
-We won't cover every single detail of Rust's syntax used in the previous exercise.
-Instead, we'll cover _just enough_ to keep going without getting stuck in the details.\
-One step at a time!
+前面的任务甚至算不上一个练习，但它已经让你接触到了不少Rust的**语法(syntax)**。
+我们不会涵盖前面练习中使用的Rust语法的每一个细节。
+相反，我们将覆盖_恰好够用_的内容来让我们继续前进，而不会陷入细节中。\
+一步一步来！
 
-## Comments
+## 注释(Comments)
 
-You can use `//` for single-line comments:
+你可以使用 `//` 来写单行注释(single-line comments)：
 
 ```rust
 // This is a single-line comment
 // Followed by another single-line comment
 ```
 
-## Functions
+## 函数(Functions)
 
-Functions in Rust are defined using the `fn` keyword, followed by the function's name, its input parameters, and its
-return type.
-The function's body is enclosed in curly braces `{}`.
+Rust中的函数(function)使用`fn`关键字定义，后跟函数名、输入参数(input parameters)和返回类型(return type)。
+函数体(function body)包含在大括号`{}`中。
 
-In previous exercise, you saw the `greeting` function:
+在前面的练习中，你看到了`greeting`函数：
 
 ```rust
 // `fn` <function_name> ( <input params> ) -> <return_type> { <body> }
@@ -39,13 +38,12 @@ fn greeting() -> &'static str {
 }
 ```
 
-`greeting` has no input parameters and returns a reference to a string slice (`&'static str`).
+`greeting`函数没有输入参数，并返回一个字符串切片(string slice)的引用(`&'static str`)。
 
-### Return type
+### 返回类型(Return type)
 
-The return type can be omitted from the signature if the function doesn't return anything (i.e. if it returns `()`,
-Rust's unit type).
-That's what happened with the `test_welcome` function:
+如果函数不返回任何值(即返回`()`，Rust的单元类型(unit type))，可以从签名(signature)中省略返回类型。
+这就是`test_welcome`函数的情况：
 
 ```rust
 fn test_welcome() {
@@ -53,7 +51,7 @@ fn test_welcome() {
 }
 ```
 
-The above is equivalent to:
+上面的代码等价于：
 
 ```rust
 // Spelling out the unit return type explicitly
@@ -63,9 +61,9 @@ fn test_welcome() -> () {
 }
 ```
 
-### Returning values
+### 返回值(Returning values)
 
-The last expression in a function is implicitly returned:
+函数中的最后一个表达式(expression)会被隐式返回：
 
 ```rust
 fn greeting() -> &'static str {
@@ -75,7 +73,7 @@ fn greeting() -> &'static str {
 }
 ```
 
-You can also use the `return` keyword to return a value early:
+你也可以使用`return`关键字来提前返回一个值：
 
 ```rust
 fn greeting() -> &'static str {
@@ -84,14 +82,14 @@ fn greeting() -> &'static str {
 }
 ```
 
-It is considered idiomatic to omit the `return` keyword when possible.
+在可能的情况下省略`return`关键字被认为是符合惯例的(idiomatic)。
 
-### Input parameters
+### 输入参数(Input parameters)
 
-Input parameters are declared inside the parentheses `()` that follow the function's name.\
-Each parameter is declared with its name, followed by a colon `:`, followed by its type.
+输入参数在函数名后的圆括号`()`内声明。\
+每个参数的声明格式为：参数名，后跟冒号`:`，然后是其类型。
 
-For example, the `greet` function below takes a `name` parameter of type `&str` (a "string slice"):
+例如，下面的`greet`函数接受一个类型为`&str`("字符串切片(string slice)")的`name`参数：
 
 ```rust
 // An input parameter
@@ -101,15 +99,13 @@ fn greet(name: &str) -> String {
 }
 ```
 
-If there are multiple input parameters, they must be separated with commas.
+如果有多个输入参数，它们必须用逗号分隔。
 
-### Type annotations
+### 类型标注(Type annotations)
 
-Since we've been mentioned "types" a few times, let's state it clearly: Rust is a **statically typed language**.\
-Every single value in Rust has a type and that type must be known to the compiler at compile-time.
+既然我们已经多次提到了"类型(types)"，让我们明确说明：Rust是一种**静态类型语言(statically typed language)**。\
+Rust中的每个值都有一个类型，并且该类型必须在编译时(compile-time)被编译器(compiler)所知。
 
-Types are a form of **static analysis**.\
-You can think of a type as a **tag** that the compiler attaches to every value in your program. Depending on the
-tag, the compiler can enforce different rules—e.g. you can't add a string to a number, but you can add two numbers
-together.
-If leveraged correctly, types can prevent whole classes of runtime bugs.
+类型是一种**静态分析(static analysis)**形式。\
+你可以将类型看作是编译器附加到程序中每个值的**标签(tag)**。根据不同的标签，编译器可以执行不同的规则——例如，你不能将字符串加到数字上，但你可以将两个数字相加。
+如果正确利用，类型可以防止整类运行时错误(runtime bugs)。
