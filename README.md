@@ -64,7 +64,7 @@
 ### 第2章：基本计算器
 - [x] ✅ 02_basic_calculator/00_intro.md
 - [x] ✅ 02_basic_calculator/01_integers.md
-- [ ] ⏸️ 02_basic_calculator/02_variables.md
+- [x] ✅ 02_basic_calculator/02_variables.md
 
 ### 第3章：控制流
 - [ ] ⏸️ 03_ticket_v1/00_intro.md

@@ -1,55 +1,50 @@
-# Variables
+# 变量 (Variables)
 
-In Rust, you can use the `let` keyword to declare **variables**.\
-For example:
+在 Rust 中，你可以使用 `let` 关键字来声明**变量 (variables)**。\
+例如：
 
 ```rust
 let x = 42;
 ```
 
-Above we defined a variable `x` and assigned it the value `42`.
+上面我们定义了一个变量 (variable) `x` 并给它赋值为 `42`。
 
-## Type
+## 类型 (Type)
 
-Every variable in Rust must have a type. It can either be inferred by the compiler or explicitly specified by the
-developer.
+Rust 中的每个变量都必须有一个类型。这个类型可以由编译器推断，也可以由开发者显式指定。
 
-### Explicit type annotation
+### 显式类型注解 (Explicit type annotation)
 
-You can specify the variable type by adding a colon `:` followed by the type after the variable name. For example:
+你可以通过在变量名后添加冒号 `:` 和类型来指定变量类型。例如：
 
 ```rust
-// let <variable_name>: <type> = <expression>;
+// let <变量名>: <类型> = <表达式>;
 let x: u32 = 42;
 ```
 
-In the example above, we explicitly constrained the type of `x` to be `u32`.
+在上面的例子中，我们显式地将 `x` 的类型约束为 `u32`。
 
-### Type inference
+### 类型推断 (Type inference)
 
-If we don't specify the type of a variable, the compiler will try to infer it based on the context in which the variable
-is used.
+如果我们不指定变量的类型，编译器会根据变量的使用上下文来尝试推断它。
 
 ```rust
 let x = 42;
 let y: u32 = x;
 ```
 
-In the example above, we didn't specify the type of `x`.\
-`x` is later assigned to `y`, which is explicitly typed as `u32`. Since Rust doesn't perform automatic type coercion,
-the compiler infers the type of `x` to be `u32`—the same as `y` and the only type that will allow the program to compile
-without errors.
+在上面的例子中，我们没有指定 `x` 的类型。\
+`x` 后来被赋值给 `y`，而 `y` 被显式地指定为 `u32` 类型。由于 Rust 不会执行自动类型强制转换，编译器推断 `x` 的类型为 `u32`——与 `y` 相同的类型，这是唯一能让程序无错误编译的类型。
 
-### Inference limitations
+### 推断的局限性 (Inference limitations)
 
-The compiler sometimes needs a little help to infer the correct variable type based on its usage.\
-In those cases you'll get a compilation error and the compiler will ask you to provide an explicit type hint to
-disambiguate the situation.
+编译器有时需要根据变量的使用情况来帮助推断正确的变量类型。\
+在这些情况下，你会得到一个编译错误，编译器会要求你提供一个显式的类型提示来解决歧义。
 
-## Function arguments are variables
+## 函数参数也是变量 (Function arguments are variables)
 
-Not all heroes wear capes, not all variables are declared with `let`.\
-Function arguments are variables too!
+并非所有的英雄都穿披风，也并非所有的变量都用 `let` 声明。\
+函数参数也是变量！
 
 ```rust
 fn add_one(x: u32) -> u32 {
@@ -57,30 +52,28 @@ fn add_one(x: u32) -> u32 {
 }
 ```
 
-In the example above, `x` is a variable of type `u32`.\
-The only difference between `x` and a variable declared with `let` is that functions arguments **must** have their type
-explicitly declared. The compiler won't infer it for you.\
-This constraint allows the Rust compiler (and us humans!) to understand the function's signature without having to look
-at its implementation. That's a big boost for compilation speed[^speed]!
+在上面的例子中，`x` 是一个 `u32` 类型的变量。\
+`x` 与用 `let` 声明的变量之间唯一的区别是，函数参数**必须**显式声明其类型。编译器不会为你推断它。\
+这个约束让 Rust 编译器（还有我们人类！）能够在不查看函数实现的情况下理解函数的签名。这对编译速度是一个巨大的提升[^speed]！
 
-## Initialization
+## 初始化 (Initialization)
 
-You don't have to initialize a variable when you declare it.\
-For example
+你不需要在声明变量时就初始化它。\
+例如
 
 ```rust
 let x: u32;
 ```
 
-is a valid variable declaration.\
-However, you must initialize the variable before using it. The compiler will throw an error if you don't:
+是一个有效的变量声明。\
+然而，你必须在使用变量之前初始化它。如果你没有这么做，编译器会抛出错误：
 
 ```rust
 let x: u32;
 let y = x + 1;
 ```
 
-will throw a compilation error:
+会抛出一个编译错误：
 
 ```text
 error[E0381]: used binding `x` isn't initialized
@@ -97,4 +90,6 @@ help: consider assigning a value
   |            +++
 ```
 
-[^speed]: The Rust compiler needs all the help it can get when it comes to compilation speed.
+[^speed]: 当涉及到编译速度时，Rust 编译器需要所有能得到的帮助。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/tree/main/book/src/02_basic_calculator/02_variables.md)
