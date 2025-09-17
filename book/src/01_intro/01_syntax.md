@@ -32,6 +32,7 @@ Rust中的函数 (function) 使用`fn`关键字 (keyword) 定义，后跟函数�
 
 ```rust
 // `fn` <函数名> ( <输入参数> ) -> <返回类型> { <函数体> }
+// `fn` <function_name> ( <input_params> ) -> <return_type> { <body> }
 fn greeting() -> &'static str {
     // TODO: 修复我 👇
     "I'm ready to __!"
