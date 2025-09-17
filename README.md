@@ -66,6 +66,7 @@
 - [x] ✅ 02_basic_calculator/01_integers.md
 - [x] ✅ 02_basic_calculator/02_variables.md
 - [x] ✅ 02_basic_calculator/03_if_else.md
+- [x] ✅ 02_basic_calculator/04_panics.md
 
 ### 第3章：控制流
 - [ ] ⏸️ 03_ticket_v1/00_intro.md
