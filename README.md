@@ -18,7 +18,7 @@
 
 - **原作者**: Mainmatter GmbH (https://mainmatter.com)
 - **原项目许可**: CC BY-NC 4.0 International
-- **中文翻译**: [你的名字]
+- **中文翻译**: [tom]
 - **翻译版本许可**: CC BY-NC 4.0 (非商业用途)
 
 ### 翻译规范
@@ -65,6 +65,7 @@
 - [x] ✅ 02_basic_calculator/00_intro.md
 - [x] ✅ 02_basic_calculator/01_integers.md
 - [x] ✅ 02_basic_calculator/02_variables.md
+- [x] ✅ 02_basic_calculator/03_if_else.md
 
 ### 第3章：控制流
 - [ ] ⏸️ 03_ticket_v1/00_intro.md
