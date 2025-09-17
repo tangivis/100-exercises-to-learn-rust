@@ -48,4 +48,4 @@ fn main() {
 
 [^macro]: 如果后面跟着 `!`，那就是宏调用。现在可以把宏看作是"辣味函数"。我们会在课程后面更详细地介绍它们。
 
-> 原文链接：[Panics](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/02_basic_calculator/04_panics.md)
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/02_basic_calculator/04_panics.md)
