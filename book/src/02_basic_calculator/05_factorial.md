@@ -1,11 +1,11 @@
-# Factorial
+# 阶乘 (Factorial)
 
-So far you've learned:
+到目前为止，你已经学习了：
 
-- How to define a function
-- How to call a function
-- Which integer types are available in Rust
-- Which arithmetic operators are available for integers
-- How to execute conditional logic via comparisons and `if`/`else` expressions
+- 如何定义函数 (function)
+- 如何调用函数
+- Rust 中可用的整数类型
+- 整数可用的算术运算符
+- 如何通过比较和 `if`/`else` 表达式执行条件逻辑
 
-It looks like you're ready to tackle factorials!
+看起来你已经准备好处理阶乘了！

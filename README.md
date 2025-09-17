@@ -67,7 +67,7 @@
 - [x] ✅ 02_basic_calculator/02_variables.md
 - [x] ✅ 02_basic_calculator/03_if_else.md
 - [x] ✅ 02_basic_calculator/04_panics.md
-- [ ] ⏸️ 02_basic_calculator/05_factorial.md
+- [x] ✅ 02_basic_calculator/05_factorial.md
 - [ ] ⏸️ 02_basic_calculator/06_while.md
 - [ ] ⏸️ 02_basic_calculator/07_for.md
 - [ ] ⏸️ 02_basic_calculator/08_overflow.md
