@@ -1,133 +1,134 @@
-# Control flow, part 1
+# 控制流（第一部分）
 
-All our programs so far have been pretty straightforward.\
-A sequence of instructions is executed from top to bottom, and that's it.
+我们到目前为止编写的程序都非常简单。\
+指令序列从上到下执行，仅此而已。
 
-It's time to introduce some **branching**.
+是时候引入一些**分支 (branching)** 了。
 
-## `if` clauses
+## `if` 语句
 
-The `if` keyword is used to execute a block of code only if a condition is true.
+`if` 关键字用于仅在条件为真时执行代码块。
 
-Here's a simple example:
+下面是一个简单的例子：
 
 ```rust
 let number = 3;
 if number < 5 {
-    println!("`number` is smaller than 5");
+    println!("`number` 小于 5");
 }
 ```
 
-This program will print `number is smaller than 5` because the condition `number < 5` is true.
+这个程序会打印 `number is smaller than 5`，因为条件 `number < 5` 为真。
 
-### `else` clauses
+### `else` 语句
 
-Like most programming languages, Rust supports an optional `else` branch to execute a block of code when the condition in an
-`if` expression is false.\
-For example:
+与大多数编程语言一样，Rust 支持可选的 `else` 分支，当 `if` 表达式中的条件为假时执行代码块。\
+例如：
 
 ```rust
 let number = 3;
 
 if number < 5 {
-    println!("`number` is smaller than 5");
+    println!("`number` 小于 5");
 } else {
-    println!("`number` is greater than or equal to 5");
+    println!("`number` 大于或等于 5");
 }
 ```
 
-### `else if` clauses
+### `else if` 语句
 
-Your code drifts more and more to the right when you have multiple `if` expressions, one nested inside the other.
+当你有多个 `if` 表达式，一个嵌套在另一个里面时，你的代码会越来越向右偏移。
 
 ```rust
 let number = 3;
 
 if number < 5 {
-    println!("`number` is smaller than 5");
+    println!("`number` 小于 5");
 } else {
     if number >= 3 {
-        println!("`number` is greater than or equal to 3, but smaller than 5");
+        println!("`number` 大于或等于 3，但小于 5");
     } else {
-        println!("`number` is smaller than 3");
+        println!("`number` 小于 3");
     }
 }
 ```
 
-You can use the `else if` keyword to combine multiple `if` expressions into a single one:
+你可以使用 `else if` 关键字将多个 `if` 表达式组合成一个：
 
 ```rust
 let number = 3;
 
 if number < 5 {
-    println!("`number` is smaller than 5");
+    println!("`number` 小于 5");
 } else if number >= 3 {
-    println!("`number` is greater than or equal to 3, but smaller than 5");
+    println!("`number` 大于或等于 3，但小于 5");
 } else {
-    println!("`number` is smaller than 3");
+    println!("`number` 小于 3");
 }
 ```
 
-## Booleans
+## 布尔值 (Booleans)
 
-The condition in an `if` expression must be of type `bool`, a **boolean**.\
-Booleans, just like integers, are a primitive type in Rust.
+`if` 表达式中的条件必须是 `bool` 类型，即**布尔值 (boolean)**。\
+布尔值与整数一样，是 Rust 中的基本类型。
 
-A boolean can have one of two values: `true` or `false`.
+布尔值可以有两个值之一：`true` 或 `false`。
 
-### No truthy or falsy values
+### 没有真值或假值
 
-If the condition in an `if` expression is not a boolean, you'll get a compilation error.
+如果 `if` 表达式中的条件不是布尔值，你会得到一个编译错误。
 
-For example, the following code will not compile:
+例如，下面的代码将无法编译：
 
 ```rust
 let number = 3;
 if number {
-    println!("`number` is not zero");
+    println!("`number` 不为零");
 }
 ```
 
-You'll get the following compilation error:
+你会得到以下编译错误：
 
 ```text
-error[E0308]: mismatched types
+error[E0308]: 类型不匹配
  --> src/main.rs:3:8
   |
 3 |     if number {
-  |        ^^^^^^ expected `bool`, found integer
+  |        ^^^^^^ 期望 `bool`，找到整数
 ```
 
-This follows from Rust's philosophy around type coercion: there's no automatic conversion from non-boolean types to booleans.
-Rust doesn't have the concept of **truthy** or **falsy** values, like JavaScript or Python.\
-You have to be explicit about the condition you want to check.
+这遵循了 Rust 关于类型强制的理念：没有从非布尔类型到布尔类型的自动转换。\
+Rust 没有像 JavaScript 或 Python 那样的**真值 (truthy)** 或**假值 (falsy)** 概念。\
+你必须明确指定要检查的条件。
 
-### Comparison operators
+### 比较运算符
 
-It's quite common to use comparison operators to build conditions for `if` expressions.\
-Here are the comparison operators available in Rust when working with integers:
+使用比较运算符为 `if` 表达式构建条件是很常见的。\
+以下是 Rust 中处理整数时可用的比较运算符：
 
-- `==`: equal to
-- `!=`: not equal to
-- `<`: less than
-- `>`: greater than
-- `<=`: less than or equal to
-- `>=`: greater than or equal to
+- `==`：等于
+- `!=`：不等于
+- `<`：小于
+- `>`：大于
+- `<=`：小于或等于
+- `>=`：大于或等于
 
-## `if/else` is an expression
+## `if/else` 是表达式
 
-In Rust, `if` expressions are **expressions**, not statements: they return a value.\
-That value can be assigned to a variable or used in other expressions. For example:
+在 Rust 中，`if` 表达式是**表达式 (expression)**，而不是语句：它们返回一个值。\
+这个值可以赋给变量或在其他表达式中使用。例如：
 
 ```rust
 let number = 3;
 let message = if number < 5 {
-    "smaller than 5"
+    "小于 5"
 } else {
-    "greater than or equal to 5"
+    "大于或等于 5"
 };
 ```
 
-In the example above, each branch of the `if` evaluates to a string literal,
-which is then assigned to the `message` variable.\
-The only requirement is that both `if` branches return the same type.
+在上面的例子中，`if` 的每个分支都评估为一个字符串字面量，
+然后将其赋值给 `message` 变量。\
+唯一的要求是两个 `if` 分支必须返回相同的类型。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/02_basic_calculator/03_if_else.md)
