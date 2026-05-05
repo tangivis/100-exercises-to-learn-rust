@@ -1,4 +1,4 @@
-# 语法 (syntax)
+# 语法 (Syntax)
 
 <div class="warning">
 
@@ -14,7 +14,7 @@
 相反，我们将覆盖_恰好够用_的内容来让我们继续前进，而不会陷入细节中。\
 一步一步来！
 
-## 注释 (comments)
+## 注释 (Comments)
 
 你可以使用 `//` 来写单行注释 (single-line comments)：
 
@@ -23,7 +23,7 @@
 // 后面跟着另一个单行注释
 ```
 
-## 函数 (functions)
+## 函数 (Functions)
 
 Rust中的函数 (function) 使用`fn`关键字 (keyword) 定义，后跟函数名、输入参数 (input parameters) 和返回类型 (return type)。
 函数体 (function body) 包含在大括号 (braces) `{}`中。
@@ -41,7 +41,7 @@ fn greeting() -> &'static str {
 
 `greeting`函数没有输入参数，并返回一个字符串切片 (string slice) 的引用 (reference) (`&'static str`)。
 
-### 返回类型 (return type)
+### 返回类型 (Return type)
 
 如果函数不返回任何值(即返回`()`，Rust的单元类型 (unit type))，可以从签名 (signature) 中省略返回类型。
 这就是`test_welcome`函数的情况：
@@ -62,7 +62,7 @@ fn test_welcome() -> () {
 }
 ```
 
-### 返回值 (returning values)
+### 返回值 (Returning values)
 
 函数中的最后一个表达式 (expression) 会被隐式返回：
 
@@ -85,7 +85,7 @@ fn greeting() -> &'static str {
 
 在可能的情况下省略`return`关键字被认为是符合惯例的 (idiomatic)。
 
-### 输入参数 (input parameters)
+### 输入参数 (Input parameters)
 
 输入参数在函数名后的圆括号`()`内声明。\
 每个参数的声明格式为：参数名，后跟冒号`:`，然后是其类型。
@@ -102,7 +102,7 @@ fn greet(name: &str) -> String {
 
 如果有多个输入参数，它们必须用逗号分隔。
 
-### 类型标注 (type annotations)
+### 类型标注 (Type annotations)
 
 既然我们已经多次提到了"类型 (types)"，让我们明确说明：Rust是一种**静态类型语言 (statically typed language)**。\
 Rust中的每个值都有一个类型，并且该类型必须在编译时(compile-time)被编译器(compiler)所知。
@@ -113,4 +113,4 @@ Rust中的每个值都有一个类型，并且该类型必须在编译时(compil
 
 ---
 
-> 原文链接：[英文原文](https://rust-exercises.com/100-exercises/01_intro/01_syntax)
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/01_intro/01_syntax.md)

@@ -5,7 +5,8 @@
 你听说过Rust，但从未有机会尝试？
 这门课程就是为你准备的！
 
-你将通过解决100个练习来学习Rust。\n你将从对Rust一无所知到能够开始编写自己的程序，一次一个练习。
+你将通过解决100个练习来学习Rust。\
+你将从对Rust一无所知到能够开始编写自己的程序，一次一个练习。
 
 > [!NOTE]
 > 本课程由 [Mainmatter](https://mainmatter.com/rust-consulting/) 编写。\

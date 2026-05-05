@@ -18,7 +18,7 @@ if number < 5 {
 }
 ```
 
-这个程序会打印 `number is smaller than 5`，因为条件 `number < 5` 为真。
+这个程序会打印 `` `number` 小于 5 ``，因为条件 `number < 5` 为真。
 
 ### `else` 语句
 
