@@ -68,11 +68,11 @@
 - [x] ✅ 02_basic_calculator/03_if_else.md
 - [x] ✅ 02_basic_calculator/04_panics.md
 - [x] ✅ 02_basic_calculator/05_factorial.md
-- [ ] ⏸️ 02_basic_calculator/06_while.md
-- [ ] ⏸️ 02_basic_calculator/07_for.md
-- [ ] ⏸️ 02_basic_calculator/08_overflow.md
-- [ ] ⏸️ 02_basic_calculator/09_saturating.md
-- [ ] ⏸️ 02_basic_calculator/10_as_casting.md
+- [x] ✅ 02_basic_calculator/06_while.md
+- [x] ✅ 02_basic_calculator/07_for.md
+- [x] ✅ 02_basic_calculator/08_overflow.md
+- [x] ✅ 02_basic_calculator/09_saturating.md
+- [x] ✅ 02_basic_calculator/10_as_casting.md
 
 ### 第3章：工单 v1 (Ticket v1)
 - [ ] ⏸️ 03_ticket_v1/00_intro.md
