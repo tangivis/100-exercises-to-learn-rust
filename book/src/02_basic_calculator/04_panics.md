@@ -23,7 +23,7 @@ attempt to divide by zero
 这就是所谓的**恐慌 (panic)**。\
 恐慌是 Rust 用来表示出现问题严重到程序无法继续执行的方式，它是一个**不可恢复的错误 (unrecoverable error)**[^catching]。除零操作就被归类为这样的错误。
 
-## panic! 宏 (macro)
+## panic! 宏 (Macro)
 
 你可以通过调用 `panic!` 宏[^macro]来有意触发恐慌：
 
