@@ -1,7 +1,7 @@
-# Vectors
+# 向量 (Vectors)
 
-Arrays' strength is also their weakness: their size must be known upfront, at compile-time.
-If you try to create an array with a size that's only known at runtime, you'll get a compilation error:
+数组的优点也是它的弱点：大小必须在编译期就已知。
+如果你尝试创建一个大小只有运行时才能知道的数组，会得到编译错误：
 
 ```rust
 let n = 10;
@@ -17,19 +17,19 @@ error[E0435]: attempt to use a non-constant value in a constant
   |                    ^ non-constant value
 ```
 
-Arrays wouldn't work for our ticket management system—we don't know how many tickets we'll need to store at compile-time.
-This is where `Vec` comes in.
+数组无法满足我们的工单管理系统——我们在编译期不知道要存多少工单。
+这就是 `Vec` 出场的时候。
 
 ## `Vec`
 
-`Vec` is a growable array type, provided by the standard library.\
-You can create an empty array using the `Vec::new` function:
+`Vec` 是标准库提供的可增长数组类型。\
+你可以用 `Vec::new` 函数创建一个空数组：
 
 ```rust
 let mut numbers: Vec<u32> = Vec::new();
 ```
 
-You would then push elements into the vector using the `push` method:
+然后用 `push` 方法把元素压入向量：
 
 ```rust
 numbers.push(1);
@@ -37,16 +37,16 @@ numbers.push(2);
 numbers.push(3);
 ```
 
-New values are added to the end of the vector.\
-You can also create an initialized vector using the `vec!` macro, if you know the values at creation time:
+新值会被加到向量末尾。\
+如果你在创建时就知道值，也可以用 `vec!` 宏创建一个已初始化的向量：
 
 ```rust
 let numbers = vec![1, 2, 3];
 ```
 
-## Accessing elements
+## 访问元素 (Accessing elements)
 
-The syntax for accessing elements is the same as with arrays:
+访问元素的语法跟数组相同：
 
 ```rust
 let numbers = vec![1, 2, 3];
@@ -55,25 +55,25 @@ let second = numbers[1];
 let third = numbers[2];
 ```
 
-The index must be of type `usize`.\
-You can also use the `get` method, which returns an `Option<&T>`:
+索引必须是 `usize` 类型。\
+也可以用 `get` 方法，返回 `Option<&T>`：
 
 ```rust
 let numbers = vec![1, 2, 3];
 assert_eq!(numbers.get(0), Some(&1));
-// You get a `None` if you try to access an out-of-bounds index
-// rather than a panic.
+// 越界时返回 `None`，
+// 而不是 panic。
 assert_eq!(numbers.get(3), None);
 ```
 
-Access is bounds-checked, just like element access with arrays. It has O(1) complexity.
+访问会做边界检查，跟数组的元素访问一样，复杂度是 O(1)。
 
-## Memory layout
+## 内存布局 (Memory layout)
 
-`Vec` is a heap-allocated data structure.\
-When you create a `Vec`, it allocates memory on the heap to store the elements.
+`Vec` 是堆分配 (heap-allocated) 的数据结构。\
+你创建 `Vec` 时，它在堆上分配内存来存储元素。
 
-If you run the following code:
+如果你运行下面的代码：
 
 ```rust
 let mut numbers = Vec::with_capacity(3);
@@ -81,7 +81,7 @@ numbers.push(1);
 numbers.push(2);
 ```
 
-you'll get the following memory layout:
+会得到这样的内存布局：
 
 ```text
       +---------+--------+----------+
@@ -96,17 +96,19 @@ Heap:  | 1 | 2 | ? |
        +---+---+---+
 ```
 
-`Vec` keeps track of three things:
+`Vec` 跟踪三件事：
 
-- The **pointer** to the heap region you reserved.
-- The **length** of the vector, i.e. how many elements are in the vector.
-- The **capacity** of the vector, i.e. the number of elements that can fit in the space reserved on the heap.
+- 指向你在堆上预留区域的**指针 (pointer)**。
+- 向量的**长度 (length)**，即向量中有多少元素。
+- 向量的**容量 (capacity)**，即在堆上预留的空间能装多少元素。
 
-This layout should look familiar: it's exactly the same as `String`!\
-That's not a coincidence: `String` is defined as a vector of bytes, `Vec<u8>`, under the hood:
+这种布局看起来应当很眼熟：和 `String` 完全一样！\
+这不是巧合：`String` 在底层就是定义为字节向量 `Vec<u8>`：
 
 ```rust
 pub struct String {
     vec: Vec<u8>,
 }
 ```
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/06_ticket_management/02_vec.md)

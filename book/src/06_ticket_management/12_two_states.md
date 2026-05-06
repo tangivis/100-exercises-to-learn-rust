@@ -1,7 +1,7 @@
-# Ticket ids
+# 工单 id (Ticket ids)
 
-Let's think again about our ticket management system.\
-Our ticket model right now looks like this:
+让我们再思考一下我们的工单管理系统。\
+当前我们的工单模型是这样：
 
 ```rust
 pub struct Ticket {
@@ -11,14 +11,13 @@ pub struct Ticket {
 }
 ```
 
-One thing is missing here: an **identifier** to uniquely identify a ticket.\
-That identifier should be unique for each ticket. That can be guaranteed by generating it automatically when
-a new ticket is created.
+这里漏了一样东西：用来唯一标识工单的**标识符 (identifier)**。\
+该标识符对每张工单都应当唯一。这点可以通过在新工单创建时自动生成来保证。
 
-## Refining the model
+## 细化模型 (Refining the model)
 
-Where should the id be stored?\
-We could add a new field to the `Ticket` struct:
+id 应当存放在哪里？\
+我们可以给 `Ticket` 结构体加一个新字段：
 
 ```rust
 pub struct Ticket {
@@ -29,8 +28,8 @@ pub struct Ticket {
 }
 ```
 
-But we don't know the id before creating the ticket. So it can't be there from the get-go.\
-It'd have to be optional:
+但在创建工单之前我们并不知道 id，所以它不能从一开始就在那。\
+那它必须是可选的：
 
 ```rust
 pub struct Ticket {
@@ -41,11 +40,9 @@ pub struct Ticket {
 }
 ```
 
-That's also not ideal—we'd have to handle the `None` case every single time we retrieve a ticket from the store,
-even though we know that the id should always be there once the ticket has been created.
+这也不理想——每次从存储中取出工单时都要处理 `None` 情况，尽管我们知道工单创建之后 id 总应当存在。
 
-The best solution is to have two different ticket **states**, represented by two separate types:
-a `TicketDraft` and a `Ticket`:
+最好的方案是：用两种独立的类型表示工单的两种**状态 (state)**——`TicketDraft` 和 `Ticket`：
 
 ```rust
 pub struct TicketDraft {
@@ -61,7 +58,8 @@ pub struct Ticket {
 }
 ```
 
-A `TicketDraft` is a ticket that hasn't been created yet. It doesn't have an id, and it doesn't have a status.\
-A `Ticket` is a ticket that has been created. It has an id and a status.\
-Since each field in `TicketDraft` and `Ticket` embeds its own constraints, we don't have to duplicate logic
-across the two types.
+`TicketDraft` 是尚未创建的工单。它没有 id，也没有状态。\
+`Ticket` 是已创建的工单。它有 id 和状态。\
+由于 `TicketDraft` 和 `Ticket` 中每个字段都内嵌了自己的约束，我们不需要在两个类型间复制逻辑。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/06_ticket_management/12_two_states.md)

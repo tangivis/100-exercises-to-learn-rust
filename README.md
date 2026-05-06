@@ -126,23 +126,23 @@
 - [x] ✅ 05_ticket_v2/15_outro.md
 
 ### 第6章：工单管理 (Ticket Management)
-- [ ] ⏸️ 06_ticket_management/00_intro.md
-- [ ] ⏸️ 06_ticket_management/01_arrays.md
-- [ ] ⏸️ 06_ticket_management/02_vec.md
-- [ ] ⏸️ 06_ticket_management/03_resizing.md
-- [ ] ⏸️ 06_ticket_management/04_iterators.md
-- [ ] ⏸️ 06_ticket_management/05_iter.md
-- [ ] ⏸️ 06_ticket_management/06_lifetimes.md
-- [ ] ⏸️ 06_ticket_management/07_combinators.md
-- [ ] ⏸️ 06_ticket_management/08_impl_trait.md
-- [ ] ⏸️ 06_ticket_management/09_impl_trait_2.md
-- [ ] ⏸️ 06_ticket_management/10_slices.md
-- [ ] ⏸️ 06_ticket_management/11_mutable_slices.md
-- [ ] ⏸️ 06_ticket_management/12_two_states.md
-- [ ] ⏸️ 06_ticket_management/13_index.md
-- [ ] ⏸️ 06_ticket_management/14_index_mut.md
-- [ ] ⏸️ 06_ticket_management/15_hashmap.md
-- [ ] ⏸️ 06_ticket_management/16_btreemap.md
+- [x] ✅ 06_ticket_management/00_intro.md
+- [x] ✅ 06_ticket_management/01_arrays.md
+- [x] ✅ 06_ticket_management/02_vec.md
+- [x] ✅ 06_ticket_management/03_resizing.md
+- [x] ✅ 06_ticket_management/04_iterators.md
+- [x] ✅ 06_ticket_management/05_iter.md
+- [x] ✅ 06_ticket_management/06_lifetimes.md
+- [x] ✅ 06_ticket_management/07_combinators.md
+- [x] ✅ 06_ticket_management/08_impl_trait.md
+- [x] ✅ 06_ticket_management/09_impl_trait_2.md
+- [x] ✅ 06_ticket_management/10_slices.md
+- [x] ✅ 06_ticket_management/11_mutable_slices.md
+- [x] ✅ 06_ticket_management/12_two_states.md
+- [x] ✅ 06_ticket_management/13_index.md
+- [x] ✅ 06_ticket_management/14_index_mut.md
+- [x] ✅ 06_ticket_management/15_hashmap.md
+- [x] ✅ 06_ticket_management/16_btreemap.md
 
 ### 第7章：线程 (Threads)
 - [ ] ⏸️ 07_threads/00_intro.md

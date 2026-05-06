@@ -1,37 +1,36 @@
-# Indexing
+# 索引 (Indexing)
 
-`TicketStore::get` returns an `Option<&Ticket>` for a given `TicketId`.\
-We've seen before how to access elements of arrays and vectors using Rust's
-indexing syntax:
+`TicketStore::get` 接受一个 `TicketId` 并返回 `Option<&Ticket>`。\
+我们之前见过怎么用 Rust 的索引语法访问数组和向量的元素：
 
 ```rust
 let v = vec![0, 1, 2];
 assert_eq!(v[0], 0);
 ```
 
-How can we provide the same experience for `TicketStore`?\
-You guessed right: we need to implement a trait, `Index`!
+我们怎么为 `TicketStore` 提供同样的体验？\
+你猜对了：我们要实现一个特质——`Index`！
 
 ## `Index`
 
-The `Index` trait is defined in Rust's standard library:
+`Index` 特质定义在 Rust 标准库中：
 
 ```rust
-// Slightly simplified
+// 略简化
 pub trait Index<Idx>
 {
     type Output;
 
-    // Required method
+    // 必须实现的方法
     fn index(&self, index: Idx) -> &Self::Output;
 }
 ```
 
-It has:
+它有：
 
-- One generic parameter, `Idx`, to represent the index type
-- One associated type, `Output`, to represent the type we retrieved using the index
+- 一个泛型参数 `Idx`，用于表示索引类型
+- 一个关联类型 `Output`，表示通过索引获取到的值的类型
 
-Notice how the `index` method doesn't return an `Option`. The assumption is that
-`index` will panic if you try to access an element that's not there, as it happens
-for array and vec indexing.
+注意 `index` 方法不返回 `Option`。预设是：当你尝试访问不存在的元素时 `index` 会 panic，跟数组和 vec 的索引一样。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/06_ticket_management/13_index.md)
