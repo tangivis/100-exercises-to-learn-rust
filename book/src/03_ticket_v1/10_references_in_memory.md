@@ -1,26 +1,26 @@
-# References
+# 引用 (References)
 
-What about references, like `&String` or `&mut String`? How are they represented in memory?
+那么 `&String` 或 `&mut String` 这样的引用呢？它们在内存中是如何表示的？
 
-Most references[^fat] in Rust are represented, in memory, as a pointer to a memory location.\
-It follows that their size is the same as the size of a pointer, a `usize`.
+Rust 中大多数引用[^fat]在内存中都表示为指向一个内存位置的指针。\
+因此它们的大小与指针大小相同，也就是一个 `usize`。
 
-You can verify this using `std::mem::size_of`:
+你可以使用 `std::mem::size_of` 来验证：
 
 ```rust
 assert_eq!(std::mem::size_of::<&String>(), 8);
 assert_eq!(std::mem::size_of::<&mut String>(), 8);
 ```
 
-A `&String`, in particular, is a pointer to the memory location where the `String`'s metadata is stored.\
-If you run this snippet:
+具体来说，`&String` 是一个指向存储 `String` 元数据 (metadata) 的内存位置的指针。\
+如果你运行下面这段代码：
 
 ```rust
 let s = String::from("Hey");
 let r = &s;
 ```
 
-you'll get something like this in memory:
+内存中你会看到类似这样的布局：
 
 ```
            --------------------------------------
@@ -37,14 +37,15 @@ Heap   | H | e | y | ? | ? |
        +---+---+---+---+---+
 ```
 
-It's a pointer to a pointer to the heap-allocated data, if you will.
-The same goes for `&mut String`.
+如果你愿意这么想：它是一个指向"指向堆上数据的指针"的指针。
+`&mut String` 也是一样。
 
-## Not all pointers point to the heap
+## 不是所有指针都指向堆 (Not all pointers point to the heap)
 
-The example above should clarify one thing: not all pointers point to the heap.\
-They just point to a memory location, which _may_ be on the heap, but doesn't have to be.
+上面的例子应该能澄清一件事：并不是所有指针都指向堆。\
+它们仅仅指向某个内存位置——_可能_在堆上，但不一定。
 
-[^fat]: [Later in the course](../04_traits/06_str_slice.md) we'll talk about **fat pointers**,
-i.e. pointers with additional metadata. As the name implies, they are larger than
-the pointers we discussed in this chapter, also known as **thin pointers**.
+[^fat]: 在课程的[后面](../04_traits/06_str_slice.md)我们会讨论**胖指针 (fat pointer)**，
+也就是带额外元数据的指针。顾名思义，它们比本章讨论的指针更大——后者也叫**瘦指针 (thin pointer)**。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/03_ticket_v1/10_references_in_memory.md)

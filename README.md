@@ -76,19 +76,19 @@
 - [x] ✅ 02_basic_calculator/10_as_casting.md
 
 ### 第3章：工单 v1 (Ticket v1)
-- [ ] ⏸️ 03_ticket_v1/00_intro.md
-- [ ] ⏸️ 03_ticket_v1/01_struct.md
-- [ ] ⏸️ 03_ticket_v1/02_validation.md
-- [ ] ⏸️ 03_ticket_v1/03_modules.md
-- [ ] ⏸️ 03_ticket_v1/04_visibility.md
-- [ ] ⏸️ 03_ticket_v1/05_encapsulation.md
-- [ ] ⏸️ 03_ticket_v1/06_ownership.md
-- [ ] ⏸️ 03_ticket_v1/07_setters.md
-- [ ] ⏸️ 03_ticket_v1/08_stack.md
-- [ ] ⏸️ 03_ticket_v1/09_heap.md
-- [ ] ⏸️ 03_ticket_v1/10_references_in_memory.md
-- [ ] ⏸️ 03_ticket_v1/11_destructor.md
-- [ ] ⏸️ 03_ticket_v1/12_outro.md
+- [x] ✅ 03_ticket_v1/00_intro.md
+- [x] ✅ 03_ticket_v1/01_struct.md
+- [x] ✅ 03_ticket_v1/02_validation.md
+- [x] ✅ 03_ticket_v1/03_modules.md
+- [x] ✅ 03_ticket_v1/04_visibility.md
+- [x] ✅ 03_ticket_v1/05_encapsulation.md
+- [x] ✅ 03_ticket_v1/06_ownership.md
+- [x] ✅ 03_ticket_v1/07_setters.md
+- [x] ✅ 03_ticket_v1/08_stack.md
+- [x] ✅ 03_ticket_v1/09_heap.md
+- [x] ✅ 03_ticket_v1/10_references_in_memory.md
+- [x] ✅ 03_ticket_v1/11_destructor.md
+- [x] ✅ 03_ticket_v1/12_outro.md
 
 ### 第4章：特质 (Traits)
 - [ ] ⏸️ 04_traits/00_intro.md

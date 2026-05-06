@@ -1,17 +1,15 @@
-# Modules
+# 模块 (Modules)
 
-The `new` method you've just defined is trying to enforce some **constraints** on the field values for `Ticket`.
-But are those invariants really enforced? What prevents a developer from creating a `Ticket`
-without going through `Ticket::new`?
+你刚刚定义的 `new` 方法试图在 `Ticket` 的字段值上强制施加一些**约束 (constraint)**。
+但这些不变量 (invariant) 真的被强制执行了吗？是什么阻止开发者绕过 `Ticket::new` 来创建一个 `Ticket`？
 
-To get proper **encapsulation** you need to become familiar with two new concepts: **visibility** and **modules**.
-Let's start with modules.
+要实现真正的**封装 (encapsulation)**，你需要熟悉两个新概念：**可见性 (visibility)** 和**模块 (module)**。
+我们先从模块讲起。
 
-## What is a module?
+## 什么是模块？(What is a module?)
 
-In Rust a **module** is a way to group related code together, under a common namespace (i.e. the module's name).\
-You've already seen modules in action: the unit tests that verify the correctness of your code are defined in a
-different module, named `tests`.
+在 Rust 中，**模块 (module)** 是一种把相关代码聚合在一起、放在一个共同命名空间（即模块名）下的方式。\
+你已经见过模块的实际用法：用来验证代码正确性的单元测试 (unit test) 就定义在一个名为 `tests` 的独立模块中。
 
 ```rust
 #[cfg(test)]
@@ -20,105 +18,99 @@ mod tests {
 }
 ```
 
-## Inline modules
+## 内联模块 (Inline modules)
 
-The `tests` module above is an example of an **inline module**: the module declaration (`mod tests`) and the module
-contents (the stuff inside `{ ... }`) are next to each other.
+上面的 `tests` 模块是**内联模块 (inline module)** 的例子：模块声明 (`mod tests`) 和模块内容（`{ ... }` 内的部分）紧挨在一起。
 
-## Module tree
+## 模块树 (Module tree)
 
-Modules can be nested, forming a **tree** structure.\
-The root of the tree is the **crate** itself, which is the top-level module that contains all the other modules.
-For a library crate, the root module is usually `src/lib.rs` (unless its location has been customized).
-The root module is also known as the **crate root**.
+模块可以嵌套，从而形成一棵**树**结构。\
+树的根是 **crate** 本身，也就是包含所有其他模块的顶级模块。
+对于库 crate (library crate)，根模块通常是 `src/lib.rs`（除非自定义了它的位置）。
+根模块也叫作 **crate 根 (crate root)**。
 
-The crate root can have submodules, which in turn can have their own submodules, and so on.
+crate 根可以有子模块，子模块还可以再有自己的子模块，依此类推。
 
-## External modules and the filesystem
+## 外部模块与文件系统 (External modules and the filesystem)
 
-Inline modules are useful for small pieces of code, but as your project grows you'll want to split your code into
-multiple files. In the parent module, you declare the existence of a submodule using the `mod` keyword.
+内联模块适合放小段代码，但项目变大后，你会想把代码拆到多个文件中。在父模块里，你用 `mod` 关键字声明子模块的存在。
 
 ```rust
 mod dog;
 ```
 
-`cargo`, Rust's build tool, is then in charge of finding the file that contains
-the module implementation.\
-If your module is declared in the root of your crate (e.g. `src/lib.rs` or `src/main.rs`),
-`cargo` expects the file to be named either:
+接下来，由 Rust 的构建工具 `cargo` 负责找到包含模块实现的文件。\
+如果你的模块声明在 crate 根（例如 `src/lib.rs` 或 `src/main.rs`），`cargo` 期待文件名是以下之一：
 
-- `src/<module_name>.rs`
-- `src/<module_name>/mod.rs`
+- `src/<模块名>.rs`
+- `src/<模块名>/mod.rs`
 
-If your module is a submodule of another module, the file should be named:
+如果你的模块是另一个模块的子模块，文件应当命名为：
 
-- `[..]/<parent_module>/<module_name>.rs`
-- `[..]/<parent_module>/<module_name>/mod.rs`
+- `[..]/<父模块>/<模块名>.rs`
+- `[..]/<父模块>/<模块名>/mod.rs`
 
-E.g. `src/animals/dog.rs` or `src/animals/dog/mod.rs` if `dog` is a submodule of `animals`.
+例如，如果 `dog` 是 `animals` 的子模块，则路径为 `src/animals/dog.rs` 或 `src/animals/dog/mod.rs`。
 
-Your IDE might help you create these files automatically when you declare a new module using the `mod` keyword.
+当你用 `mod` 关键字声明新模块时，IDE 通常会帮你自动创建这些文件。
 
-## Item paths and `use` statements
+## 项目路径与 `use` 语句 (Item paths and `use` statements)
 
-You can access items defined in the same module without any special syntax. You just use their name.
+在同一模块内访问已定义的项 (item) 不需要任何特殊语法，直接用名字即可。
 
 ```rust
 struct Ticket {
     // [...]
 }
 
-// No need to qualify `Ticket` in any way here
-// because we're in the same module
+// 这里不需要对 `Ticket` 做任何限定
+// 因为我们处于同一个模块中
 fn mark_ticket_as_done(ticket: Ticket) {
     // [...]
 }
 ```
 
-That's not the case if you want to access an entity from a different module.\
-You have to use a **path** pointing to the entity you want to access.
+但要访问另一个模块中的实体，情况就不一样了。\
+你必须使用一个**路径 (path)** 来指向想访问的实体。
 
-You can compose the path in various ways:
+可以用多种方式组合路径：
 
-- starting from the root of the current crate, e.g. `crate::module_1::MyStruct`
-- starting from the parent module, e.g. `super::my_function`
-- starting from the current module, e.g. `sub_module_1::MyStruct`
+- 从当前 crate 的根开始，例如 `crate::module_1::MyStruct`
+- 从父模块开始，例如 `super::my_function`
+- 从当前模块开始，例如 `sub_module_1::MyStruct`
 
-Both `crate` and `super` are **keywords**.\
-`crate` refers to the root of the current crate, while `super` refers to the parent of the current module.
+`crate` 和 `super` 都是**关键字**。\
+`crate` 指向当前 crate 的根；`super` 指向当前模块的父模块。
 
-Having to write the full path every time you want to refer to a type can be cumbersome.
-To make your life easier, you can introduce a `use` statement to bring the entity into scope.
+每次都要写完整路径会很啰嗦。
+为了让你的生活更轻松，可以用 `use` 语句把实体引入作用域 (scope)。
 
 ```rust
-// Bring `MyStruct` into scope
+// 把 `MyStruct` 引入作用域
 use crate::module_1::module_2::MyStruct;
 
-// Now you can refer to `MyStruct` directly
+// 现在可以直接使用 `MyStruct`
 fn a_function(s: MyStruct) {
      // [...]
 }
 ```
 
-### Star imports
+### 星号导入 (Star imports)
 
-You can also import all the items from a module with a single `use` statement.
+也可以用一条 `use` 语句导入模块中的所有项。
 
 ```rust
 use crate::module_1::module_2::*;
 ```
 
-This is known as a **star import**.\
-It is generally discouraged because it can pollute the current namespace, making it hard to understand
-where each name comes from and potentially introducing name conflicts.\
-Nonetheless, it can be useful in some cases, like when writing unit tests. You might have noticed
-that most of our test modules start with a `use super::*;` statement to bring all the items from the parent module
-(the one being tested) into scope.
+这种用法称为**星号导入 (star import)**。\
+通常不建议使用，因为它会污染当前命名空间，让人难以分辨每个名字的来源，还可能引入命名冲突。\
+不过在某些场景下它仍然有用，比如写单元测试时。你可能注意到我们大部分测试模块开头都有一句 `use super::*;`，把父模块（被测模块）中的所有项引入作用域。
 
-## Visualizing the module tree
+## 可视化模块树 (Visualizing the module tree)
 
-If you're struggling to picture the module tree of your project, you can try using
-[`cargo-modules`](https://crates.io/crates/cargo-modules) to visualize it!
+如果你很难想象项目的模块树，可以试试用 [`cargo-modules`](https://crates.io/crates/cargo-modules) 来可视化它！
 
-Refer to their documentation for installation instructions and usage examples.
+具体的安装与使用方法请参考其文档。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/03_ticket_v1/03_modules.md)
