@@ -1,20 +1,19 @@
-# Heap
+# 堆 (Heap)
 
-The stack is great, but it can't solve all our problems. What about data whose size is not known at compile time?
-Collections, strings, and other dynamically-sized data cannot be (entirely) stack-allocated.
-That's where the **heap** comes in.
+栈很棒，但它不能解决我们所有的问题。那些大小在编译期未知的数据怎么办？
+集合 (collection)、字符串 (string) 以及其他动态尺寸 (dynamically-sized) 的数据无法（完整地）放到栈上。
+这就轮到**堆 (heap)** 登场了。
 
-## Heap allocations
+## 堆分配 (Heap allocations)
 
-You can visualize the heap as a big chunk of memory—a huge array, if you will.\
-Whenever you need to store data on the heap, you ask a special program, the **allocator**, to reserve for you
-a subset of the heap. We call this interaction (and the memory you reserved) a **heap allocation**.
-If the allocation succeeds, the allocator will give you a **pointer** to the start of the reserved block.
+你可以把堆想象成一大块内存——如果愿意的话，可以把它当成一个巨大的数组。\
+每当你需要在堆上存储数据时，你向一个特殊的程序——**分配器 (allocator)**——请求为你预留堆中的一部分。我们把这种交互（以及你预留的那块内存）称作一次**堆分配 (heap allocation)**。
+如果分配成功，分配器会给你一个指向所预留区块起始位置的**指针 (pointer)**。
 
-## No automatic de-allocation
+## 没有自动释放 (No automatic de-allocation)
 
-The heap is structured quite differently from the stack.\
-Heap allocations are not contiguous, they can be located anywhere inside the heap.
+堆的结构与栈相当不同。\
+堆分配不是连续的，它们可以位于堆中的任意位置。
 
 ```
 +---+---+---+---+---+---+-...-+-...-+---+---+---+---+---+---+---+
@@ -22,35 +21,33 @@ Heap allocations are not contiguous, they can be located anywhere inside the hea
 +---+---+---+---+---+---+ ... + ... +---+---+---+---+---+---+---+
 ```
 
-It's the allocator's job to keep track of which parts of the heap are in use and which are free.
-The allocator won't automatically free the memory you allocated, though: you need to be deliberate about it,
-calling the allocator again to **free** the memory you no longer need.
+哪些区域在使用、哪些是空闲的，由分配器来跟踪。
+不过分配器不会自动释放你分配的内存：你需要主动行事，再次调用分配器来**释放 (free)** 你不再需要的内存。
 
-## Performance
+## 性能 (Performance)
 
-The heap's flexibility comes at a cost: heap allocations are **slower** than stack allocations.
-There's a lot more bookkeeping involved!\
-If you read articles about performance optimization you'll often be advised to minimize heap allocations
-and prefer stack-allocated data whenever possible.
+堆的灵活性是有代价的：堆分配比栈分配**更慢**。
+其中涉及大量的簿记！\
+如果你读过性能优化方面的文章，常会看到这样的建议：尽量减少堆分配，能用栈分配的就用栈。
 
-## `String`'s memory layout
+## `String` 的内存布局 (`String`'s memory layout)
 
-When you create a local variable of type `String`,
-Rust is forced to allocate on the heap[^empty]: it doesn't know in advance how much text you're going to put in it,
-so it can't reserve the right amount of space on the stack.\
-But a `String` is not _entirely_ heap-allocated, it also keeps some data on the stack. In particular:
+当你创建一个 `String` 类型的局部变量时，
+Rust 不得不在堆上分配[^empty]：它无法事先知道你要往里塞多少文本，
+所以无法在栈上提前预留合适的空间。\
+但 `String` 并不是_完全_位于堆上，它在栈上也保留了一些数据。具体来说：
 
-- The **pointer** to the heap region you reserved.
-- The **length** of the string, i.e. how many bytes are in the string.
-- The **capacity** of the string, i.e. how many bytes have been reserved on the heap.
+- 指向你预留的堆区域的**指针 (pointer)**。
+- 字符串的**长度 (length)**，即字符串当前包含的字节数。
+- 字符串的**容量 (capacity)**，即在堆上预留了多少字节。
 
-Let's look at an example to understand this better:
+我们看个例子来更好理解：
 
 ```rust
 let mut s = String::with_capacity(5);
 ```
 
-If you run this code, memory will be laid out like this:
+如果你运行这段代码，内存布局会是这样：
 
 ```
       +---------+--------+----------+
@@ -65,14 +62,11 @@ Heap:  | ? | ? | ? | ? | ? |
        +---+---+---+---+---+
 ```
 
-We asked for a `String` that can hold up to 5 bytes of text.\
-`String::with_capacity` goes to the allocator and asks for 5 bytes of heap memory. The allocator returns
-a pointer to the start of that memory block.\
-The `String` is empty, though. On the stack, we keep track of this information by distinguishing between
-the length and the capacity: this `String` can hold up to 5 bytes, but it currently holds 0 bytes of
-actual text.
+我们请求了一个最多能装 5 字节文本的 `String`。\
+`String::with_capacity` 向分配器请求 5 字节的堆内存。分配器返回一个指向那块内存起始位置的指针。\
+不过此时 `String` 是空的。在栈上，我们通过区分长度 (length) 和容量 (capacity) 来记录这一信息：这个 `String` 最多可装 5 字节，但当前只装了 0 字节实际文本。
 
-If you push some text into the `String`, the situation will change:
+如果你往 `String` 里塞一些文本，情况就变了：
 
 ```rust
 s.push_str("Hey");
@@ -91,52 +85,49 @@ Heap:  | H | e | y | ? | ? |
        +---+---+---+---+---+
 ```
 
-`s` now holds 3 bytes of text. Its length is updated to 3, but capacity remains 5.
-Three of the five bytes on the heap are used to store the characters `H`, `e`, and `y`.
+`s` 现在装了 3 字节的文本。它的长度更新为 3，但容量仍是 5。
+堆上 5 个字节中有 3 个被用来存储字符 `H`、`e` 和 `y`。
 
 ### `usize`
 
-How much space do we need to store pointer, length and capacity on the stack?\
-It depends on the **architecture** of the machine you're running on.
+我们要在栈上存指针、长度和容量，需要多大空间？\
+这取决于你运行机器的**架构 (architecture)**。
 
-Every memory location on your machine has an [**address**](https://en.wikipedia.org/wiki/Memory_address), commonly
-represented as an unsigned integer.
-Depending on the maximum size of the address space (i.e. how much memory your machine can address),
-this integer can have a different size. Most modern machines use either a 32-bit or a 64-bit address space.
+机器上的每个内存位置都有一个[**地址 (address)**](https://en.wikipedia.org/wiki/Memory_address)，通常表示为一个无符号整数。
+根据地址空间的最大大小（即你的机器能寻址多少内存）不同，
+这个整数可能有不同的大小。大多数现代机器使用 32 位或 64 位的地址空间。
 
-Rust abstracts away these architecture-specific details by providing the `usize` type:
-an unsigned integer that's as big as the number of bytes needed to address memory on your machine.
-On a 32-bit machine, `usize` is equivalent to `u32`. On a 64-bit machine, it matches `u64`.
+Rust 通过提供 `usize` 类型来抽象掉这些与架构相关的细节：
+一个无符号整数，其大小恰好等于在你机器上寻址内存所需的字节数。
+在 32 位机器上，`usize` 等价于 `u32`；在 64 位机器上，对应 `u64`。
 
-Capacity, length and pointers are all represented as `usize`s in Rust[^equivalence].
+容量、长度和指针在 Rust 中都用 `usize` 表示[^equivalence]。
 
-### No `std::mem::size_of` for the heap
+### 堆上没有 `std::mem::size_of` (No `std::mem::size_of` for the heap)
 
-`std::mem::size_of` returns the amount of space a type would take on the stack,
-which is also known as the **size of the type**.
+`std::mem::size_of` 返回某个类型在栈上会占用多少空间，
+也称为**类型的大小 (size of the type)**。
 
-> What about the memory buffer that `String` is managing on the heap? Isn't that
-> part of the size of `String`?
+> 那么 `String` 在堆上管理的内存缓冲区呢？它不算 `String` 大小的一部分吗？
 
-No!\
-That heap allocation is a **resource** that `String` is managing.
-It's not considered to be part of the `String` type by the compiler.
+不算！\
+那块堆分配是 `String` 所**管理的资源**。
+编译器并不把它看作 `String` 类型的一部分。
 
-`std::mem::size_of` doesn't know (or care) about additional heap-allocated data
-that a type might manage or refer to via pointers, as is the case with `String`,
-therefore it doesn't track its size.
+`std::mem::size_of` 不知道（也不在乎）某个类型可能管理或通过指针引用的额外堆内存——`String` 就属于这种情况——
+因此它不会跟踪这部分大小。
 
-Unfortunately there is no equivalent of `std::mem::size_of` to measure the amount of
-heap memory that a certain value is allocating at runtime. Some types might
-provide methods to inspect their heap usage (e.g. `String`'s `capacity` method),
-but there is no general-purpose "API" to retrieve runtime heap usage in Rust.\
-You can, however, use a memory profiler tool (e.g. [DHAT](https://valgrind.org/docs/manual/dh-manual.html)
-or [a custom allocator](https://docs.rs/dhat/latest/dhat/)) to inspect the heap usage of your program.
+不幸的是，目前没有等价于 `std::mem::size_of` 的工具来在运行时测量某个值正在分配多少堆内存。
+某些类型可能提供方法来查看它们的堆使用情况（例如 `String` 的 `capacity` 方法），
+但 Rust 没有通用的"API"来在运行时获取堆使用情况。\
+不过你可以用内存分析工具（例如 [DHAT](https://valgrind.org/docs/manual/dh-manual.html)
+或[自定义分配器 (custom allocator)](https://docs.rs/dhat/latest/dhat/)）来检查程序的堆使用情况。
 
-[^empty]: `std` doesn't allocate if you create an **empty** `String` (i.e. `String::new()`).
-Heap memory will be reserved when you push data into it for the first time.
+[^empty]: 如果你创建一个**空** `String`（即 `String::new()`），`std` 不会进行堆分配。
+当你第一次往里塞数据时，才会预留堆内存。
 
-[^equivalence]: The size of a pointer depends on the operating system too.
-In certain environments, a pointer is **larger** than a memory address (e.g. [CHERI](https://web.archive.org/web/20240517051950/https://blog.acolyer.org/2019/05/28/cheri-abi/)).
-Rust makes the simplifying assumption that pointers are the same size as memory addresses,
-which is true for most modern systems you're likely to encounter.
+[^equivalence]: 指针的大小还取决于操作系统。
+在某些环境下，指针**比**内存地址更大（例如 [CHERI](https://web.archive.org/web/20240517051950/https://blog.acolyer.org/2019/05/28/cheri-abi/)）。
+Rust 做了一个简化假设——指针和内存地址同样大——这对你大多数现代系统来说是成立的。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/03_ticket_v1/09_heap.md)

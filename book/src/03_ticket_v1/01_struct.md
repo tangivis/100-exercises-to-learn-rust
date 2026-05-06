@@ -1,20 +1,18 @@
-# Structs
+# 结构体 (Structs)
 
-We need to keep track of three pieces of information for each ticket:
+我们需要为每个工单 (ticket) 跟踪三项信息：
 
-- A title
-- A description
-- A status
+- 标题 (title)
+- 描述 (description)
+- 状态 (status)
 
-We can start by using a [`String`](https://doc.rust-lang.org/std/string/struct.String.html)
-to represent them. `String` is the type defined in Rust's standard library to represent
-[UTF-8 encoded](https://en.wikipedia.org/wiki/UTF-8) text.
+可以先用 [`String`](https://doc.rust-lang.org/std/string/struct.String.html) 来表示它们。`String` 是 Rust 标准库中定义的类型，用于表示 [UTF-8 编码](https://en.wikipedia.org/wiki/UTF-8) 的文本。
 
-But how do we **combine** these three pieces of information into a single entity?
+但我们怎么把这三项信息**组合**成一个单一实体呢？
 
-## Defining a `struct`
+## 定义 `struct`
 
-A `struct` defines a **new Rust type**.
+`struct`（结构体）定义一个**新的 Rust 类型**。
 
 ```rust
 struct Ticket {
@@ -24,14 +22,14 @@ struct Ticket {
 }
 ```
 
-A struct is quite similar to what you would call a class or an object in other programming languages.
+结构体 (struct) 跟其他编程语言中的"类 (class)"或"对象 (object)"很相似。
 
-## Defining fields
+## 定义字段 (Defining fields)
 
-The new type is built by combining other types as **fields**.\
-Each field must have a name and a type, separated by a colon, `:`. If there are multiple fields, they are separated by a comma, `,`.
+新类型由其他类型作为**字段 (field)** 组合而成。\
+每个字段必须有名字和类型，二者用冒号 `:` 分隔。如果有多个字段，则用逗号 `,` 分隔。
 
-Fields don't have to be of the same type, as you can see in the `Configuration` struct below:
+字段不必是同一类型，参见下面的 `Configuration` 结构体：
 
 ```rust
 struct Configuration {
@@ -40,12 +38,12 @@ struct Configuration {
 }
 ```
 
-## Instantiation
+## 实例化 (Instantiation)
 
-You can create an instance of a struct by specifying the values for each field:
+你可以通过为每个字段指定值来创建一个结构体实例：
 
 ```rust
-// Syntax: <StructName> { <field_name>: <value>, ... }
+// 语法：<结构体名> { <字段名>: <值>, ... }
 let ticket = Ticket {
     title: "Build a ticket system".into(),
     description: "A Kanban board".into(),
@@ -53,19 +51,19 @@ let ticket = Ticket {
 };
 ```
 
-## Accessing fields
+## 访问字段 (Accessing fields)
 
-You can access the fields of a struct using the `.` operator:
+你可以使用 `.` 运算符访问结构体的字段：
 
 ```rust
-// Field access
+// 字段访问
 let x = ticket.description;
 ```
 
-## Methods
+## 方法 (Methods)
 
-We can attach behaviour to our structs by defining **methods**.\
-Using the `Ticket` struct as an example:
+我们可以通过定义**方法 (method)** 来给结构体附加行为。\
+以 `Ticket` 结构体为例：
 
 ```rust
 impl Ticket {
@@ -74,35 +72,34 @@ impl Ticket {
     }
 }
 
-// Syntax:
-// impl <StructName> {
-//    fn <method_name>(<parameters>) -> <return_type> {
-//        // Method body
+// 语法：
+// impl <结构体名> {
+//    fn <方法名>(<参数>) -> <返回类型> {
+//        // 方法体
 //    }
 // }
 ```
 
-Methods are pretty similar to functions, with two key differences:
+方法 (method) 与函数 (function) 非常相似，但有两个关键区别：
 
-1. methods must be defined inside an **`impl` block**
-2. methods may use `self` as their first parameter.
-   `self` is a keyword and represents the instance of the struct the method is being called on.
+1. 方法必须定义在 **`impl` 块**内
+2. 方法可以使用 `self` 作为它的第一个参数。
+   `self` 是一个关键字，代表方法被调用时所在的结构体实例。
 
 ### `self`
 
-If a method takes `self` as its first parameter, it can be called using the **method call syntax**:
+如果方法的第一个参数是 `self`，可以使用**方法调用语法 (method call syntax)** 来调用：
 
 ```rust
-// Method call syntax: <instance>.<method_name>(<parameters>)
+// 方法调用语法：<实例>.<方法名>(<参数>)
 let is_open = ticket.is_open();
 ```
 
-This is the same calling syntax you used to perform saturating arithmetic operations on `u32` values
-in [the previous chapter](../02_basic_calculator/09_saturating.md).
+这与你在[上一章](../02_basic_calculator/09_saturating.md)中对 `u32` 值执行饱和算术运算时所用的调用语法是一样的。
 
-### Static methods
+### 静态方法 (Static methods)
 
-If a method doesn't take `self` as its first parameter, it's a **static method**.
+如果方法不以 `self` 作为第一个参数，那它就是**静态方法 (static method)**。
 
 ```rust
 struct Configuration {
@@ -111,29 +108,30 @@ struct Configuration {
 }
 
 impl Configuration {
-    // `default` is a static method on `Configuration`
+    // `default` 是 `Configuration` 上的静态方法
     fn default() -> Configuration {
         Configuration { version: 0, active: false }
     }
 }
 ```
 
-The only way to call a static method is by using the **function call syntax**:
+调用静态方法的唯一方式是使用**函数调用语法 (function call syntax)**：
 
 ```rust
-// Function call syntax: <StructName>::<method_name>(<parameters>)
+// 函数调用语法：<结构体名>::<方法名>(<参数>)
 let default_config = Configuration::default();
 ```
 
-### Equivalence
+### 等价性 (Equivalence)
 
-You can use the function call syntax even for methods that take `self` as their first parameter:
+即使方法的第一个参数是 `self`，你依然可以用函数调用语法来调用它：
 
 ```rust
-// Function call syntax:
-//   <StructName>::<method_name>(<instance>, <parameters>)
+// 函数调用语法：
+//   <结构体名>::<方法名>(<实例>, <参数>)
 let is_open = Ticket::is_open(ticket);
 ```
 
-The function call syntax makes it quite clear that `ticket` is being used as `self`, the first parameter of the method,
-but it's definitely more verbose. Prefer the method call syntax when possible.
+函数调用语法非常清楚地表明 `ticket` 被当作 `self`（方法的第一个参数）使用，但显然更冗长。可以的话还是优先使用方法调用语法。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/03_ticket_v1/01_struct.md)

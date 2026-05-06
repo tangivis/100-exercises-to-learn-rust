@@ -1,29 +1,27 @@
-# Memory layout
+# 内存布局 (Memory layout)
 
-We've looked at ownership and references from an operational point of view—what you can and can't do with them.
-Now it's a good time to take a look under the hood: let's talk about **memory**.
+我们已经从操作层面看过了所有权 (ownership) 和引用 (reference)——能做什么、不能做什么。
+现在是时候掀开盖子看看：聊聊**内存 (memory)** 吧。
 
-## Stack and heap
+## 栈与堆 (Stack and heap)
 
-When discussing memory, you'll often hear people talk about the **stack** and the **heap**.\
-These are two different memory regions used by programs to store data.
+谈到内存时，你常常会听人提起**栈 (stack)** 和**堆 (heap)**。\
+它们是程序用来存储数据的两种不同的内存区域。
 
-Let's start with the stack.
+我们先从栈讲起。
 
-## Stack
+## 栈 (Stack)
 
-The **stack** is a **LIFO** (Last In, First Out) data structure.\
-When you call a function, a new **stack frame** is added on top of the stack. That stack frame stores
-the function's arguments, local variables and a few "bookkeeping" values.\
-When the function returns, the stack frame is popped off the stack[^stack-overflow].
+**栈 (stack)** 是一种 **LIFO**（Last In, First Out，后进先出）数据结构。\
+当你调用一个函数时，一个新的**栈帧 (stack frame)** 会被压到栈顶。这个栈帧用于存储函数的参数、局部变量以及一些"簿记 (bookkeeping)"值。\
+当函数返回时，对应的栈帧会从栈上弹出[^stack-overflow]。
 
 ```text
 +-----------------+
 | frame for func1 |
 +-----------------+
         |
-        | func2 is 
-        | called
+        | 调用 func2
         v
 +-----------------+
 | frame for func2 |
@@ -31,42 +29,41 @@ When the function returns, the stack frame is popped off the stack[^stack-overfl
 | frame for func1 |
 +-----------------+
         |
-        | func2  
-        | returns
+        | func2 返回
         v
 +-----------------+
 | frame for func1 |
 +-----------------+
 ```
 
-From an operational point of view, stack allocation/de-allocation is **very fast**.\
-We are always pushing and popping data from the top of the stack, so we don't need to search for free memory.
-We also don't have to worry about fragmentation: the stack is a single contiguous block of memory.
+从操作层面看，栈上的分配/释放**非常快**。\
+我们总是从栈顶压入和弹出数据，因此不需要去搜索可用内存。
+我们也不必担心碎片 (fragmentation)：栈是一整块连续 (contiguous) 的内存。
 
 ### Rust
 
-Rust will often allocate data on the stack.\
-You have a `u32` input argument in a function? Those 32 bits will be on the stack.\
-You define a local variable of type `i64`? Those 64 bits will be on the stack.\
-It all works quite nicely because the size of those integers is known at compile time, therefore
-the compiled program knows how much space it needs to reserve on the stack for them.
+Rust 经常把数据放在栈上。\
+你的函数有一个 `u32` 类型的输入参数？那 32 位会放在栈上。\
+你定义了一个 `i64` 类型的局部变量？那 64 位也会放在栈上。\
+这一切运转良好，是因为这些整数的大小在编译期就已知，因此编译后的程序知道为它们在栈上保留多少空间。
 
 ### `std::mem::size_of`
 
-You can verify how much space a type would take on the stack
-using the [`std::mem::size_of`](https://doc.rust-lang.org/std/mem/fn.size_of.html) function.
+你可以使用 [`std::mem::size_of`](https://doc.rust-lang.org/std/mem/fn.size_of.html) 函数来查看某个类型在栈上会占用多少空间。
 
-For a `u8`, for example:
+例如对 `u8`：
 
 ```rust
-// We'll explain this funny-looking syntax (`::<u8>`) later on.
-// Ignore it for now.
+// 这个奇怪的语法 (`::<u8>`) 我们之后再讲。
+// 现在先忽略它。
 assert_eq!(std::mem::size_of::<u8>(), 1);
 ```
 
-1 makes sense, because a `u8` is 8 bits long, or 1 byte.
+结果是 1，这很合理，因为 `u8` 是 8 位长，也就是 1 字节。
 
-[^stack-overflow]: If you have nested function calls, each function pushes its data onto the stack when it's called but
-it doesn't pop it off until the innermost function returns.
-If you have too many nested function calls, you can run out of stack space—the stack is not infinite!
-That's called a [**stack overflow**](https://en.wikipedia.org/wiki/Stack_overflow).
+[^stack-overflow]: 如果你有嵌套的函数调用，每个函数被调用时都把它的数据压到栈上，
+但要等到最内层的函数返回时才会弹出。
+如果嵌套调用太深，你可能会用尽栈空间——栈不是无限的！
+这就叫 [**栈溢出 (stack overflow)**](https://en.wikipedia.org/wiki/Stack_overflow)。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/03_ticket_v1/08_stack.md)

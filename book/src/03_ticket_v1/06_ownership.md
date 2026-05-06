@@ -1,7 +1,7 @@
-# Ownership
+# 所有权 (Ownership)
 
-If you solved the previous exercise using what this course has taught you so far,
-your accessor methods probably look like this:
+如果你只用本课程到目前为止所学的内容来解决前一个练习，
+你的访问器方法可能长这样：
 
 ```rust
 impl Ticket {
@@ -19,19 +19,19 @@ impl Ticket {
 }
 ```
 
-Those methods compile and are enough to get tests to pass, but in a real-world scenario they won't get you very far.
-Consider this snippet:
+这些方法能编译通过，并且足以让测试通过，但放到真实场景中就走不远了。
+看看下面这段代码：
 
 ```rust
 if ticket.status() == "To-Do" {
-    // We haven't covered the `println!` macro yet,
-    // but for now it's enough to know that it prints 
-    // a (templated) message to the console
+    // 我们还没介绍 `println!` 宏 (macro)，
+    // 但目前你只需要知道它会向控制台
+    // 打印（带模板的）信息
     println!("Your next task is: {}", ticket.title());
 }
 ```
 
-If you try to compile it, you'll get an error:
+如果你尝试编译它，会得到一个错误：
 
 ```text
 error[E0382]: use of moved value: `ticket`
@@ -55,57 +55,55 @@ note: `Ticket::status` takes ownership of the receiver `self`,
    |                       ^^^^
 ```
 
-Congrats, this is your first borrow-checker error!
+恭喜你，这是你的第一个借用检查器 (borrow-checker) 错误！
 
-## The perks of Rust's ownership system
+## Rust 所有权系统的好处 (The perks of Rust's ownership system)
 
-Rust's ownership system is designed to ensure that:
+Rust 的所有权系统旨在确保：
 
-- Data is never mutated while it's being read
-- Data is never read while it's being mutated
-- Data is never accessed after it has been destroyed
+- 数据在被读取时永远不会被修改
+- 数据在被修改时永远不会被读取
+- 数据被销毁后永远不会被访问
 
-These constraints are enforced by the **borrow checker**, a subsystem of the Rust compiler,
-often the subject of jokes and memes in the Rust community.
+这些约束由**借用检查器 (borrow checker)** 强制执行，它是 Rust 编译器的一个子系统，常常成为 Rust 社区里的笑话和梗的主角。
 
-Ownership is a key concept in Rust, and it's what makes the language unique.
-Ownership enables Rust to provide **memory safety without compromising performance**.
-All these things are true at the same time for Rust:
+所有权 (ownership) 是 Rust 中的关键概念，也是这门语言独一无二的原因。
+所有权让 Rust 能够提供**内存安全 (memory safety) 而不牺牲性能**。
+对 Rust 来说，下面这些可以同时成立：
 
-1. There is no runtime garbage collector
-2. As a developer, you rarely have to manage memory directly
-3. You can't cause dangling pointers, double frees, and other memory-related bugs
+1. 没有运行时垃圾回收器 (runtime garbage collector)
+2. 作为开发者，你很少需要直接管理内存
+3. 不会出现悬垂指针 (dangling pointer)、双重释放 (double free) 以及其他与内存相关的 bug
 
-Languages like Python, JavaScript, and Java give you 2. and 3., but not 1.\
-Language like C or C++ give you 1., but neither 2. nor 3.
+像 Python、JavaScript 和 Java 这样的语言能给你 2 和 3，但没有 1。\
+像 C 或 C++ 这样的语言给你 1，但既没有 2 也没有 3。
 
-Depending on your background, 3. might sound a bit arcane: what is a "dangling pointer"?
-What is a "double free"? Why are they dangerous?\
-Don't worry: we'll cover these concepts in more details during the rest of the course.
+根据你的背景不同，第 3 点可能听起来有点神秘：什么是"悬垂指针 (dangling pointer)"？什么是"双重释放 (double free)"？为什么它们危险？\
+别担心：在课程的剩余部分我们会更详细地讨论这些概念。
 
-For now, though, let's focus on learning how to work within Rust's ownership system.
+不过现在，我们先专注于学习如何在 Rust 的所有权系统中工作。
 
-## The owner
+## 所有者 (The owner)
 
-In Rust, each value has an **owner**, statically determined at compile-time.
-There is only one owner for each value at any given time.
+在 Rust 中，每个值都有一个**所有者 (owner)**，所有者在编译时被静态确定。
+任意时刻，每个值都只有一个所有者。
 
-## Move semantics
+## 移动语义 (Move semantics)
 
-Ownership can be transferred.
+所有权可以转移。
 
-If you own a value, for example, you can transfer ownership to another variable:
+例如，如果你拥有某个值，你可以把所有权转移给另一个变量：
 
 ```rust
-let a = "hello, world".to_string(); // <- `a` is the owner of the String
-let b = a;  // <- `b` is now the owner of the String
+let a = "hello, world".to_string(); // <- `a` 是该 String 的所有者
+let b = a;  // <- `b` 现在是该 String 的所有者
 ```
 
-Rust's ownership system is baked into the type system: each function has to declare in its signature
-_how_ it wants to interact with its arguments.
+Rust 的所有权系统是融入到类型系统中的：每个函数都必须在其签名 (signature) 中声明
+它打算如何与其参数交互。
 
-So far, all our methods and functions have **consumed** their arguments: they've taken ownership of them.
-For example:
+到目前为止，我们所有的方法和函数都**消费 (consumed)** 了它们的参数：它们获取了参数的所有权。
+例如：
 
 ```rust
 impl Ticket {
@@ -115,11 +113,10 @@ impl Ticket {
 }
 ```
 
-`Ticket::description` takes ownership of the `Ticket` instance it's called on.\
-This is known as **move semantics**: ownership of the value (`self`) is **moved** from the caller to
-the callee, and the caller can't use it anymore.
+`Ticket::description` 获取了它被调用的 `Ticket` 实例的所有权。\
+这就是所谓的**移动语义 (move semantics)**：值（`self`）的所有权从调用方**移动 (moved)** 到被调用方，调用方再也不能使用它了。
 
-That's exactly the language used by the compiler in the error message we saw earlier:
+这正是编译器在前面那条错误信息里所用的措辞：
 
 ```text
 error[E0382]: use of moved value: `ticket`
@@ -143,53 +140,52 @@ note: `Ticket::status` takes ownership of the receiver `self`,
    |                       ^^^^
 ```
 
-In particular, this is the sequence of events that unfold when we call `ticket.status()`:
+具体来说，调用 `ticket.status()` 时发生了如下事件序列：
 
-- `Ticket::status` takes ownership of the `Ticket` instance
-- `Ticket::status` extracts `status` from `self` and transfers ownership of `status` back to the caller
-- The rest of the `Ticket` instance is discarded (`title` and `description`)
+- `Ticket::status` 拿走 `Ticket` 实例的所有权
+- `Ticket::status` 从 `self` 中提取出 `status`，并把 `status` 的所有权转移回调用方
+- `Ticket` 实例的其余部分被丢弃（`title` 和 `description`）
 
-When we try to use `ticket` again via `ticket.title()`, the compiler complains: the `ticket` value is gone now,
-we no longer own it, therefore we can't use it anymore.
+接着我们尝试通过 `ticket.title()` 再次使用 `ticket` 时，编译器抱怨：`ticket` 这个值已经没了，我们不再拥有它，因此不能再使用它。
 
-To build _useful_ accessor methods we need to start working with **references**.
+要构建_有用的_访问器方法，我们需要开始使用**引用 (reference)**。
 
-## Borrowing
+## 借用 (Borrowing)
 
-It is desirable to have methods that can read the value of a variable without taking ownership of it.\
-Programming would be quite limited otherwise. In Rust, that's done via **borrowing**.
+我们希望访问器方法能读取变量的值，而不夺走它的所有权。\
+否则编程就太受限了。在 Rust 中，这通过**借用 (borrowing)** 来实现。
 
-Whenever you borrow a value, you get a **reference** to it.\
-References are tagged with their privileges[^refine]:
+每当你借用一个值时，你会得到对它的一个**引用 (reference)**。\
+引用按照其权限被打上标签[^refine]：
 
-- Immutable references (`&`) allow you to read the value, but not to mutate it
-- Mutable references (`&mut`) allow you to read and mutate the value
+- 不可变引用 (`&`)：允许你读取值，但不能修改
+- 可变引用 (`&mut`)：允许你既读取也修改值
 
-Going back to the goals of Rust's ownership system:
+回到 Rust 所有权系统的目标：
 
-- Data is never mutated while it's being read
-- Data is never read while it's being mutated
+- 数据在被读取时永远不会被修改
+- 数据在被修改时永远不会被读取
 
-To ensure these two properties, Rust has to introduce some restrictions on references:
+为了保证这两点，Rust 必须对引用引入一些限制：
 
-- You can't have a mutable reference and an immutable reference to the same value at the same time
-- You can't have more than one mutable reference to the same value at the same time
-- The owner can't mutate the value while it's being borrowed
-- You can have as many immutable references as you want, as long as there are no mutable references
+- 不能同时存在指向同一值的可变引用和不可变引用
+- 不能同时存在多个指向同一值的可变引用
+- 当一个值正在被借用时，所有者不能修改这个值
+- 只要不存在可变引用，你想要多少不可变引用都可以
 
-In a way, you can think of an immutable reference as a "read-only" lock on the value,
-while a mutable reference is like a "read-write" lock.
+某种程度上，你可以把不可变引用看作对该值的"只读 (read-only)"锁，
+而可变引用则像"读写 (read-write)"锁。
 
-All these restrictions are enforced at compile-time by the borrow checker.
+所有这些限制都由借用检查器 (borrow checker) 在编译期强制执行。
 
-### Syntax
+### 语法 (Syntax)
 
-How do you borrow a value, in practice?\
-By adding `&` or `&mut` **in front a variable**, you're borrowing its value.
-Careful though! The same symbols (`&` and `&mut`) in **front of a type** have a different meaning:
-they denote a different type, a reference to the original type.
+实际上你怎么借用一个值？\
+通过在变量**前面**加上 `&` 或 `&mut`，你就借用了它的值。
+但要注意！同样的符号（`&` 和 `&mut`）放在**类型前面**含义不同：
+它们表示一个不同的类型——对原类型的引用 (reference)。
 
-For example:
+例如：
 
 ```rust
 struct Configuration {
@@ -202,38 +198,39 @@ fn main() {
         version: 1,
         active: true,
     };
-    // `b` is a reference to the `version` field of `config`.
-    // The type of `b` is `&u32`, since it contains a reference to 
-    // a `u32` value.
-    // We create a reference by borrowing `config.version`, using 
-    // the `&` operator.
-    // Same symbol (`&`), different meaning depending on the context!
+    // `b` 是对 `config` 的 `version` 字段的引用。
+    // `b` 的类型是 `&u32`，因为它包含了对一个
+    // `u32` 值的引用。
+    // 我们用 `&` 运算符借用 `config.version`，
+    // 创建了一个引用。
+    // 同样的符号 (`&`)，根据上下文含义不同！
     let b: &u32 = &config.version;
-    //     ^ The type annotation is not necessary, 
-    //       it's just there to clarify what's going on
+    //     ^ 类型注解 (type annotation) 不是必需的，
+    //       这里写出来只是为了说明发生了什么
 }
 ```
 
-The same concept applies to function arguments and return types:
+同样的概念也适用于函数参数和返回类型：
 
 ```rust
-// `f` takes a mutable reference to a `u32` as an argument, 
-// bound to the name `number`
+// `f` 接受一个对 `u32` 的可变引用作为参数，
+// 绑定到名字 `number`
 fn f(number: &mut u32) -> &u32 {
     // [...]
 }
 ```
 
-## Breathe in, breathe out
+## 深呼吸 (Breathe in, breathe out)
 
-Rust's ownership system can be a bit overwhelming at first.\
-But don't worry: it'll become second nature with practice.\
-And you're going to get a lot of practice over the rest of this chapter, as well as the rest of the course!
-We'll revisit each concept multiple times to make sure you get familiar with them
-and truly understand how they work.
+Rust 的所有权系统初看可能有点压倒性。\
+但别担心：随着练习的增多，它会变成你的第二天性。\
+本章剩余部分以及整个课程都会让你练个够！
+我们会反复回顾每个概念，确保你对它们足够熟悉、真正理解它们的工作原理。
 
-Towards the end of this chapter we'll explain _why_ Rust's ownership system is designed the way it is.
-For the time being, focus on understanding the _how_. Take each compiler error as a learning opportunity!
+到本章末尾，我们会解释 Rust 的所有权系统_为什么_要这样设计。
+此刻，先专注于理解_怎么用_。把每条编译器错误都当作一次学习机会！
 
-[^refine]: This is a great mental model to start out, but it doesn't capture the _full_ picture.
-We'll refine our understanding of references [later in the course](../07_threads/06_interior_mutability.md).
+[^refine]: 这是个不错的入门心智模型，但它没有捕捉到_完整_的图景。
+我们在课程[后面](../07_threads/06_interior_mutability.md)会进一步细化对引用 (reference) 的理解。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/03_ticket_v1/06_ownership.md)

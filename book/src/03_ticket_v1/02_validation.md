@@ -1,6 +1,6 @@
-# Validation
+# 验证 (Validation)
 
-Let's go back to our ticket definition:
+让我们回到工单 (ticket) 的定义：
 
 ```rust
 struct Ticket {
@@ -10,12 +10,13 @@ struct Ticket {
 }
 ```
 
-We are using "raw" types for the fields of our `Ticket` struct.
-This means that users can create a ticket with an empty title, a suuuuuuuper long description or
-a nonsensical status (e.g. "Funny").\
-We can do better than that!
+我们对 `Ticket` 结构体的字段使用了"原始"类型。
+这意味着用户可以创建一个标题为空、描述超长、或者状态毫无意义（例如 "Funny"）的工单。\
+我们能做得更好！
 
-## Further reading
+## 进一步阅读
 
-- Check out [`String`'s documentation](https://doc.rust-lang.org/std/string/struct.String.html)
-  for a thorough overview of the methods it provides. You'll need it for the exercise!
+- 完整浏览一下 [`String` 的文档](https://doc.rust-lang.org/std/string/struct.String.html)，
+  了解它提供的方法。完成练习时你会用到它！
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/03_ticket_v1/02_validation.md)
