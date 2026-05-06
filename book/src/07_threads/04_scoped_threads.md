@@ -1,8 +1,8 @@
-# Scoped threads
+# 作用域线程 (Scoped threads)
 
-All the lifetime issues we discussed so far have a common source:
-the spawned thread can outlive its parent.\
-We can sidestep this issue by using **scoped threads**.
+我们到目前为止讨论的所有生命周期问题都有一个共同根源：
+被 spawn 的线程可能比父线程更长寿。\
+我们可以通过使用**作用域线程 (scoped threads)** 绕开这个问题。
 
 ```rust
 let v = vec![1, 2, 3];
@@ -22,21 +22,19 @@ std::thread::scope(|scope| {
 println!("Here's v: {v:?}");
 ```
 
-Let's unpack what's happening.
+我们逐步拆解发生了什么。
 
 ## `scope`
 
-The `std::thread::scope` function creates a new **scope**.\
-`std::thread::scope` takes a closure as input, with a single argument: a `Scope` instance.
+`std::thread::scope` 函数创建一个新的**作用域 (scope)**。\
+`std::thread::scope` 接受一个闭包作为输入，闭包带一个参数：`Scope` 实例。
 
-## Scoped spawns
+## 作用域内的 spawn (Scoped spawns)
 
-`Scope` exposes a `spawn` method.\
-Unlike `std::thread::spawn`, all threads spawned using a `Scope` will be
-**automatically joined** when the scope ends.
+`Scope` 暴露了一个 `spawn` 方法。\
+跟 `std::thread::spawn` 不同，所有通过 `Scope` spawn 的线程在作用域结束时都会**自动 join**。
 
-If we were to "translate" the previous example to `std::thread::spawn`,
-it'd look like this:
+如果我们把前面的例子"翻译"成 `std::thread::spawn`，会是这样：
 
 ```rust
 let v = vec![1, 2, 3];
@@ -57,17 +55,15 @@ handle2.join().unwrap();
 println!("Here's v: {v:?}");
 ```
 
-## Borrowing from the environment
+## 从环境借用 (Borrowing from the environment)
 
-The translated example wouldn't compile, though: the compiler would complain
-that `&v` can't be used from our spawned threads since its lifetime isn't
-`'static`.
+不过翻译过来的版本不会通过编译：编译器会抱怨 `&v` 不能从被 spawn 的线程里使用，因为它的生命周期不是 `'static`。
 
-That's not an issue with `std::thread::scope`—you can **safely borrow from the environment**.
+`std::thread::scope` 没有这个问题——你可以**安全地从环境借用 (safely borrow from the environment)**。
 
-In our example, `v` is created before the spawning points.
-It will only be dropped _after_ `scope` returns. At the same time,
-all threads spawned inside `scope` are guaranteed to finish _before_ `scope` returns,
-therefore there is no risk of having dangling references.
+我们的例子里，`v` 在 spawn 之前就创建了。
+它要在 `scope` 返回 _之后_ 才被丢弃。同时，所有在 `scope` 内 spawn 的线程都保证在 `scope` 返回 _之前_ 完成，因此不存在悬垂引用的风险。
 
-The compiler won't complain!
+编译器不会抱怨！
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/07_threads/04_scoped_threads.md)

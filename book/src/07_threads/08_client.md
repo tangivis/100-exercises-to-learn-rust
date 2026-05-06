@@ -1,8 +1,7 @@
-# A dedicated `Client` type
+# 专用的 `Client` 类型 (A dedicated `Client` type)
 
-All the interactions from the client side have been fairly low-level: you have to
-manually create a response channel, build the command, send it to the server, and
-then call `recv` on the response channel to get the response.
+到目前为止从客户端侧的所有交互都相当低层：你必须手动创建响应通道、构建命令、把它发给服务端，再对响应通道调用 `recv` 取响应。
 
-This is a lot of boilerplate code that could be abstracted away, and that's
-exactly what we're going to do in this exercise.
+这有大量样板代码可以抽象出去，本练习要做的正是这件事。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/07_threads/08_client.md)
