@@ -1,59 +1,43 @@
-# Don't block the runtime
+# 不要阻塞运行时 (Don't block the runtime)
 
-Let's circle back to yield points.\
-Unlike threads, **Rust tasks cannot be preempted**.
+让我们回到让出点 (yield points)。\
+与线程不同，**Rust 任务不可被抢占 (preempted)**。
 
-`tokio` cannot, on its own, decide to pause a task and run another one in its place.
-The control goes back to the executor **exclusively** when the task yields—i.e.
-when `Future::poll` returns `Poll::Pending` or, in the case of `async fn`, when
-you `.await` a future.
+`tokio` 不能自行决定暂停一个任务并替它运行另一个。
+控制权**仅在**任务让出时回到执行器——也就是 `Future::poll` 返回 `Poll::Pending` 时，或者对 `async fn` 来说，你 `.await` 一个 future 时。
 
-This exposes the runtime to a risk: if a task never yields, the runtime will never
-be able to run another task. This is called **blocking the runtime**.
+这给运行时带来一个风险：如果一个任务从不让出，运行时就永远没法运行另一个任务。这叫**阻塞运行时 (blocking the runtime)**。
 
-## What is blocking?
+## 什么算阻塞？(What is blocking?)
 
-How long is too long? How much time can a task spend without yielding before it
-becomes a problem?
+多长才算太长？任务不让出能撑多久才会成问题？
 
-It depends on the runtime, the application, the number of in-flight tasks, and
-many other factors. But, as a general rule of thumb, try to spend less than 100
-microseconds between yield points.
+这取决于运行时、应用、在飞 (in-flight) 任务数以及许多其他因素。但作为一般经验法则，让出点之间的执行尽量不超过 100 微秒。
 
-## Consequences
+## 后果 (Consequences)
 
-Blocking the runtime can lead to:
+阻塞运行时可能导致：
 
-- **Deadlocks**: if the task that's not yielding is waiting for another task to
-  complete, and that task is waiting for the first one to yield, you have a deadlock.
-  No progress can be made, unless the runtime is able to schedule the other task on
-  a different thread.
-- **Starvation**: other tasks might not be able to run, or might run after a long
-  delay, which can lead to poor performances (e.g. high tail latencies).
+- **死锁 (Deadlocks)**：如果不让出的任务在等待另一个任务完成，而那个任务又在等第一个任务让出，那就是死锁。
+  无法推进——除非运行时能把另一个任务调度到不同线程上。
+- **饿死 (Starvation)**：其他任务可能跑不起来，或大幅延迟才跑起来，导致性能差（例如尾部延迟高）。
 
-## Blocking is not always obvious
+## 阻塞并不总是显而易见 (Blocking is not always obvious)
 
-Some types of operations should generally be avoided in async code, like:
+某些操作通常应当避免在异步代码里执行，例如：
 
-- Synchronous I/O. You can't predict how long it will take, and it's likely to be
-  longer than 100 microseconds.
-- Expensive CPU-bound computations.
+- 同步 I/O。你预测不了它要花多久，而且很可能超过 100 微秒。
+- 昂贵的 CPU 密集型计算。
 
-The latter category is not always obvious though. For example, sorting a vector with
-a few elements is not a problem; that evaluation changes if the vector has billions
-of entries.
+后一类不总是显而易见。例如，对几个元素的向量排序不是问题；如果向量有数十亿条目，评价就变了。
 
-## How to avoid blocking
+## 怎么避免阻塞 (How to avoid blocking)
 
-OK, so how do you avoid blocking the runtime assuming you _must_ perform an operation
-that qualifies or risks qualifying as blocking?\
-You need to move the work to a different thread. You don't want to use the so-called
-runtime threads, the ones used by `tokio` to run tasks.
+好，那么如果你 _必须_ 执行一项符合或可能符合阻塞条件的操作，怎么避免阻塞运行时？\
+你需要把工作搬到不同的线程上。你不希望使用所谓的运行时线程——也就是 `tokio` 用来跑任务的那些线程。
 
-`tokio` provides a dedicated threadpool for this purpose, called the **blocking pool**.
-You can spawn a synchronous operation on the blocking pool using the
-`tokio::task::spawn_blocking` function. `spawn_blocking` returns a future that resolves
-to the result of the operation when it completes.
+`tokio` 为此提供了一个专门的线程池，叫**阻塞池 (blocking pool)**。
+你可以用 `tokio::task::spawn_blocking` 把同步操作 spawn 到阻塞池上。`spawn_blocking` 返回一个 future，操作完成时该 future 解析为操作结果。
 
 ```rust
 use tokio::task;
@@ -64,16 +48,16 @@ fn expensive_computation() -> u64 {
 
 async fn run() {
     let handle = task::spawn_blocking(expensive_computation);
-    // Do other stuff in the meantime
+    // 在此期间做别的事
     let result = handle.await.unwrap();
 }
 ```
 
-The blocking pool is long-lived. `spawn_blocking` should be faster
-than creating a new thread directly via `std::thread::spawn`
-because the cost of thread initialization is amortized over multiple calls.
+阻塞池是长生命周期的。`spawn_blocking` 应当比直接通过 `std::thread::spawn` 创建新线程更快，
+因为线程初始化的成本被多次调用摊销了。
 
-## Further reading
+## 进一步阅读
 
-- Check out [Alice Ryhl's blog post](https://ryhl.io/blog/async-what-is-blocking/)
-  on the topic.
+- 看看 [Alice Ryhl 关于这个话题的博文](https://ryhl.io/blog/async-what-is-blocking/)。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/08_futures/05_blocking.md)

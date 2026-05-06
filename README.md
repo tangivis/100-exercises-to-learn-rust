@@ -162,18 +162,18 @@
 - [x] ✅ 07_threads/14_sync.md
 
 ### 第8章：Futures (异步编程)
-- [ ] ⏸️ 08_futures/00_intro.md
-- [ ] ⏸️ 08_futures/01_async_fn.md
-- [ ] ⏸️ 08_futures/02_spawn.md
-- [ ] ⏸️ 08_futures/03_runtime.md
-- [ ] ⏸️ 08_futures/04_future.md
-- [ ] ⏸️ 08_futures/05_blocking.md
-- [ ] ⏸️ 08_futures/06_async_aware_primitives.md
-- [ ] ⏸️ 08_futures/07_cancellation.md
-- [ ] ⏸️ 08_futures/08_outro.md
+- [x] ✅ 08_futures/00_intro.md
+- [x] ✅ 08_futures/01_async_fn.md
+- [x] ✅ 08_futures/02_spawn.md
+- [x] ✅ 08_futures/03_runtime.md
+- [x] ✅ 08_futures/04_future.md
+- [x] ✅ 08_futures/05_blocking.md
+- [x] ✅ 08_futures/06_async_aware_primitives.md
+- [x] ✅ 08_futures/07_cancellation.md
+- [x] ✅ 08_futures/08_outro.md
 
 ### 进阶内容 (Going Further)
-- [ ] ⏸️ going_further.md
+- [x] ✅ going_further.md
 
 ## 许可证
 
