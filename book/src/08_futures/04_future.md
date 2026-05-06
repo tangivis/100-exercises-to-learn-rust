@@ -1,8 +1,8 @@
-# The `Future` trait
+# `Future` 特质 (The `Future` trait)
 
-## The local `Rc` problem
+## 局部 `Rc` 问题 (The local `Rc` problem)
 
-Let's go back to `tokio::spawn`'s signature:
+回到 `tokio::spawn` 的签名：
 
 ```rust
 pub fn spawn<F>(future: F) -> JoinHandle<F::Output>
@@ -12,12 +12,11 @@ pub fn spawn<F>(future: F) -> JoinHandle<F::Output>
 { /* */ }
 ```
 
-What does it _actually_ mean for `F` to be `Send`?\
-It implies, as we saw in the previous section, that whatever value it captures from the
-spawning environment has to be `Send`. But it goes further than that.
+`F` 是 `Send` 究竟意味着什么？\
+正如上一节所见，它意味着 `F` 从 spawn 环境捕获的所有值都得是 `Send`。但还不止如此。
 
-Any value that's _held across a .await point_ has to be `Send`.\
-Let's look at an example:
+任何 _跨越 .await 点_ 持有的值都必须是 `Send`。\
+看一个例子：
 
 ```rust
 use std::rc::Rc;
@@ -28,20 +27,19 @@ fn spawner() {
 }
 
 async fn example() {
-    // A value that's not `Send`,
-    // created _inside_ the async function
+    // 一个非 `Send` 的值，
+    // 在 async 函数 _内部_ 创建
     let non_send = Rc::new(1);
     
-    // A `.await` point that does nothing
+    // 一个什么也不做的 `.await` 点
     yield_now().await;
 
-    // The local non-`Send` value is still needed
-    // after the `.await`
+    // `.await` 之后仍需要这个本地非 `Send` 值
     println!("{}", non_send);
 }
 ```
 
-The compiler will reject this code:
+编译器会拒绝这段代码：
 
 ```text
 error: future cannot be sent between threads safely
@@ -67,25 +65,23 @@ note: required by a bound in `tokio::spawn`
     |                     ^^^^ required by this bound in `spawn`
 ```
 
-To understand why that's the case, we need to refine our understanding of
-Rust's asynchronous model.
+要理解这是为什么，我们得细化对 Rust 异步模型的理解。
 
-## The `Future` trait
+## `Future` 特质 (The `Future` trait)
 
-We stated early on that `async` functions return **futures**, types that implement
-the `Future` trait. You can think of a future as a **state machine**.
-It's in one of two states:
+我们早先说过 `async` 函数返回**未来体 (futures)**——实现了 `Future` 特质的类型。可以把 future 看作一个**状态机 (state machine)**。
+它处于两种状态之一：
 
-- **pending**: the computation has not finished yet.
-- **ready**: the computation has finished, here's the output.
+- **pending（待定）**：计算尚未完成。
+- **ready（就绪）**：计算已完成，输出在此。
 
-This is encoded in the trait definition:
+这点编码在特质定义里：
 
 ```rust
 trait Future {
     type Output;
     
-    // Ignore `Pin` and `Context` for now
+    // 暂时忽略 `Pin` 和 `Context`
     fn poll(
       self: Pin<&mut Self>, 
       cx: &mut Context<'_>
@@ -95,36 +91,32 @@ trait Future {
 
 ### `poll`
 
-The `poll` method is the heart of the `Future` trait.\
-A future on its own doesn't do anything. It needs to be **polled** to make progress.\
-When you call `poll`, you're asking the future to do some work.
-`poll` tries to make progress, and then returns one of the following:
+`poll` 方法是 `Future` 特质的核心。\
+future 自身什么也不做。它需要被**轮询 (polled)** 才能推进。\
+当你调用 `poll` 时，你在请求 future 做一些工作。
+`poll` 尝试推进，然后返回下列之一：
 
-- `Poll::Pending`: the future is not ready yet. You need to call `poll` again later.
-- `Poll::Ready(value)`: the future has finished. `value` is the result of the computation,
-  of type `Self::Output`.
+- `Poll::Pending`：future 尚未就绪。你需要稍后再调用 `poll`。
+- `Poll::Ready(value)`：future 已完成。`value` 是计算结果，类型为 `Self::Output`。
 
-Once `Future::poll` returns `Poll::Ready`, it should not be polled again: the future has
-completed, there's nothing left to do.
+一旦 `Future::poll` 返回 `Poll::Ready`，就不应再被 poll：future 已经完成，没有事可做了。
 
-### The role of the runtime
+### 运行时的角色 (The role of the runtime)
 
-You'll rarely, if ever, be calling poll directly.\
-That's the job of your async runtime: it has all the required information (the `Context`
-in `poll`'s signature) to ensure that your futures are making progress whenever they can.
+你很少（甚至从不）需要直接调用 `poll`。\
+那是异步运行时的工作：它拥有所需的所有信息（`poll` 签名中的 `Context`），确保你的 future 在能推进时尽量推进。
 
-## `async fn` and futures
+## `async fn` 与 future (`async fn` and futures)
 
-We've worked with the high-level interface, asynchronous functions.\
-We've now looked at the low-level primitive, the `Future trait`.
+我们已经使用过高层接口——异步函数。\
+现在又看了底层原语 `Future` 特质。
 
-How are they related?
+它们怎么关联？
 
-Every time you mark a function as asynchronous, that function will return a future.
-The compiler will transform the body of your asynchronous function into a **state machine**:
-one state for each `.await` point.
+每次你把函数标记为异步，那个函数就会返回一个 future。
+编译器会把异步函数体转换为一个**状态机 (state machine)**：每个 `.await` 点对应一个状态。
 
-Going back to our `Rc` example:
+回到我们的 `Rc` 例子：
 
 ```rust
 use std::rc::Rc;
@@ -137,7 +129,7 @@ async fn example() {
 }
 ```
 
-The compiler would transform it into an enum that looks somewhat like this:
+编译器会把它转换成一个看起来类似下面的枚举：
 
 ```rust
 pub enum ExampleFuture {
@@ -147,24 +139,17 @@ pub enum ExampleFuture {
 }
 ```
 
-When `example` is called, it returns `ExampleFuture::NotStarted`. The future has never
-been polled yet, so nothing has happened.\
-When the runtime polls it the first time, `ExampleFuture` will advance until the next
-`.await` point: it'll stop at the `ExampleFuture::YieldNow(Rc<i32>)` stage of the state
-machine, returning `Poll::Pending`.\
-When it's polled again, it'll execute the remaining code (`println!`) and
-return `Poll::Ready(())`.
+调用 `example` 时，它返回 `ExampleFuture::NotStarted`。future 还没被 poll 过，所以什么也没发生。\
+当运行时第一次 poll 它时，`ExampleFuture` 会推进到下一个 `.await` 点：会停在状态机的 `ExampleFuture::YieldNow(Rc<i32>)` 阶段，返回 `Poll::Pending`。\
+再次被 poll 时，它会执行剩余代码（`println!`）并返回 `Poll::Ready(())`。
 
-When you look at its state machine representation, `ExampleFuture`,
-it is now clear why `example` is not `Send`: it holds an `Rc`, therefore
-it cannot be `Send`.
+看到它的状态机表示 `ExampleFuture` 后，就清楚为什么 `example` 不是 `Send` 了：它持有一个 `Rc`，因此不能 `Send`。
 
-## Yield points
+## 让出点 (Yield points)
 
-As you've just seen with `example`, every `.await` point creates a new intermediate
-state in the lifecycle of a future.\
-That's why `.await` points are also known as **yield points**: your future _yields control_
-back to the runtime that was polling it, allowing the runtime to pause it and (if necessary)
-schedule another task for execution, thus making progress on multiple fronts concurrently.
+如刚才用 `example` 看到的，每个 `.await` 点都在 future 生命周期里创建一个新的中间状态。\
+这就是 `.await` 点也叫**让出点 (yield points)** 的原因：你的 future 把控制权 _让出 (yield)_ 给正在 poll 它的运行时，允许运行时暂停它，并（必要时）调度另一个任务执行，从而在多个方向上并发推进。
 
-We'll come back to the importance of yielding in a later section.
+我们会在后面一节再回到让出 (yield) 的重要性。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/08_futures/04_future.md)
