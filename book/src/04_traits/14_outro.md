@@ -1,27 +1,23 @@
-# Wrapping up
+# 总结 (Wrapping up)
 
-We've covered quite a few different traits in this chapter—and we've only scratched the surface!
-It may feel like you have a lot to remember, but don't worry: you'll bump into these traits
-so often when writing Rust code that they'll soon become second nature.
+本章我们覆盖了相当多不同的特质 (trait)——而且我们只触及了表面！
+你可能觉得有很多东西要记，但别担心：在写 Rust 代码时你会经常碰到这些特质，很快它们就会变成你的第二天性。
 
-## Closing thoughts
+## 收尾思考 (Closing thoughts)
 
-Traits are powerful, but don't overuse them.\
-A few guidelines to keep in mind:
+特质很强大，但不要滥用。\
+请记住下面几条指导原则：
 
-- Don't make a function generic if it is always invoked with a single type. It introduces indirection in your
-  codebase, making it harder to understand and maintain.
-- Don't create a trait if you only have one implementation. It's a sign that the trait is not needed.
-- Implement standard traits for your types (`Debug`, `PartialEq`, etc.) whenever it makes sense.
-  It will make your types more idiomatic and easier to work with, unlocking a lot of functionality provided
-  by the standard library and ecosystem crates.
-- Implement traits from third-party crates if you need the functionality they unlock within their ecosystem.
-- Beware of making code generic solely to use mocks in your tests. The maintainability cost of this approach
-  can be high, and it's often better to use a different testing strategy. Check out the
-  [testing masterclass](https://github.com/mainmatter/rust-advanced-testing-workshop)
-  for details on high-fidelity testing.
+- 不要因为一时的便利就让函数泛型化——如果它总是只用一种类型来调用。这会在你的代码库里引入间接性，让代码更难理解和维护。
+- 如果你只有一个实现，就不要创建特质。这通常意味着你不需要这个特质。
+- 在合理时为自己的类型实现标准特质（`Debug`、`PartialEq` 等）。
+  这能让你的类型更符合习惯用法，更易于使用，并解锁标准库及生态 crate 提供的大量功能。
+- 如果你需要某个第三方 crate 在它的生态中解锁的功能，就实现该 crate 的特质。
+- 警惕仅仅为了在测试中使用 mock 而把代码变成泛型的做法。这种方式的可维护性代价可能很高，通常更好的做法是采用不同的测试策略。详情可以查看[测试 master class](https://github.com/mainmatter/rust-advanced-testing-workshop)，了解高保真度测试。
 
-## Testing your knowledge
+## 检验你的知识 (Testing your knowledge)
 
-Before moving on, let's go through one last exercise to consolidate what we've learned.
-You'll have minimal guidance this time—just the exercise description and the tests to guide you.
+继续向前之前，让我们再做最后一个练习来巩固所学。
+这次你只会得到很少的指引——只有练习描述和测试可供参考。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/04_traits/14_outro.md)

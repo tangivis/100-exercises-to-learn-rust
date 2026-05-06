@@ -1,6 +1,6 @@
-# Traits
+# 特质 (Traits)
 
-Let's look again at our `Ticket` type:
+让我们再次看看 `Ticket` 类型：
 
 ```rust
 pub struct Ticket {
@@ -10,13 +10,13 @@ pub struct Ticket {
 }
 ```
 
-All our tests, so far, have been making assertions using `Ticket`'s fields.
+到目前为止，我们的所有测试都是基于 `Ticket` 的字段进行断言的。
 
 ```rust
 assert_eq!(ticket.title(), "A new title");
 ```
 
-What if we wanted to compare two `Ticket` instances directly?
+如果我们想直接比较两个 `Ticket` 实例呢？
 
 ```rust
 let ticket1 = Ticket::new(/* ... */);
@@ -24,7 +24,7 @@ let ticket2 = Ticket::new(/* ... */);
 ticket1 == ticket2
 ```
 
-The compiler will stop us:
+编译器会拦下我们：
 
 ```text
 error[E0369]: binary operation `==` cannot be applied to type `Ticket`
@@ -38,28 +38,27 @@ error[E0369]: binary operation `==` cannot be applied to type `Ticket`
 note: an implementation of `PartialEq` might be missing for `Ticket`
 ```
 
-`Ticket` is a new type. Out of the box, there is **no behavior attached to it**.\
-Rust doesn't magically infer how to compare two `Ticket` instances just because they contain `String`s.
+`Ticket` 是一个新类型。开箱即用时，**它身上没有任何行为**。\
+Rust 不会因为它包含了 `String` 字段就魔法般地推断出该如何比较两个 `Ticket` 实例。
 
-The Rust compiler is nudging us in the right direction though: it's suggesting that we might be missing an implementation
-of `PartialEq`. `PartialEq` is a **trait**!
+不过 Rust 编译器朝着正确方向给了我们提示：它建议我们可能缺少了 `PartialEq` 的实现。`PartialEq` 就是一个**特质 (trait)**！
 
-## What are traits?
+## 什么是特质？(What are traits?)
 
-Traits are Rust's way of defining **interfaces**.\
-A trait defines a set of methods that a type must implement to satisfy the trait's contract.
+特质 (trait) 是 Rust 定义**接口 (interface)** 的方式。\
+特质定义了一组方法，类型必须实现它们才能满足该特质的契约 (contract)。
 
-### Defining a trait
+### 定义一个特质 (Defining a trait)
 
-The syntax for a trait definition goes like this:
+特质定义的语法如下：
 
 ```rust
-trait <TraitName> {
-    fn <method_name>(<parameters>) -> <return_type>;
+trait <特质名> {
+    fn <方法名>(<参数>) -> <返回类型>;
 }
 ```
 
-We might, for example, define a trait named `MaybeZero` that requires its implementors to define an `is_zero` method:
+例如，我们可以定义一个名为 `MaybeZero` 的特质，要求实现者定义一个 `is_zero` 方法：
 
 ```rust
 trait MaybeZero {
@@ -67,20 +66,19 @@ trait MaybeZero {
 }
 ```
 
-### Implementing a trait
+### 实现一个特质 (Implementing a trait)
 
-To implement a trait for a type we use the `impl` keyword, just like we do for regular[^inherent] methods,
-but the syntax is a bit different:
+为类型实现特质要使用 `impl` 关键字，跟我们为类型定义普通[^inherent]方法时一样，只是语法略有不同：
 
 ```rust
-impl <TraitName> for <TypeName> {
-    fn <method_name>(<parameters>) -> <return_type> {
-        // Method body
+impl <特质名> for <类型名> {
+    fn <方法名>(<参数>) -> <返回类型> {
+        // 方法体
     }
 }
 ```
 
-For example, to implement the `MaybeZero` trait for a custom number type, `WrappingU32`:
+例如，给一个自定义数字类型 `WrappingU32` 实现 `MaybeZero` 特质：
 
 ```rust
 pub struct WrappingU32 {
@@ -94,34 +92,35 @@ impl MaybeZero for WrappingU32 {
 }
 ```
 
-### Invoking a trait method
+### 调用特质方法 (Invoking a trait method)
 
-To invoke a trait method, we use the `.` operator, just like we do with regular methods:
+要调用特质的方法，跟调用普通方法一样使用 `.` 运算符：
 
 ```rust
 let x = WrappingU32 { inner: 5 };
 assert!(!x.is_zero());
 ```
 
-To invoke a trait method, two things must be true:
+要调用特质方法，必须满足两个条件：
 
-- The type must implement the trait.
-- The trait must be in scope.
+- 类型实现了该特质。
+- 该特质必须在作用域 (scope) 中。
 
-To satisfy the latter, you may have to add a `use` statement for the trait:
+为满足后者，你可能需要为该特质添加一个 `use` 语句：
 
 ```rust
 use crate::MaybeZero;
 ```
 
-This is not necessary if:
+下列情况则不需要 `use`：
 
-- The trait is defined in the same module where the invocation occurs.
-- The trait is defined in the standard library's **prelude**.
-  The prelude is a set of traits and types that are automatically imported into every Rust program.
-  It's as if `use std::prelude::*;` was added at the beginning of every Rust module.
+- 特质定义在调用所在的同一模块中。
+- 特质定义在标准库的**预导入 (prelude)** 中。
+  预导入是一组在每个 Rust 程序中都会自动导入的特质和类型。
+  就好像每个 Rust 模块开头都隐式加了一句 `use std::prelude::*;`。
 
-You can find the list of traits and types in the prelude in the
-[Rust documentation](https://doc.rust-lang.org/std/prelude/index.html).
+你可以在 [Rust 文档](https://doc.rust-lang.org/std/prelude/index.html)中查看预导入中的特质和类型列表。
 
-[^inherent]: A method defined directly on a type, without using a trait, is also known as an **inherent method**.
+[^inherent]: 不通过特质、直接定义在类型上的方法也叫**固有方法 (inherent method)**。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/04_traits/01_trait.md)

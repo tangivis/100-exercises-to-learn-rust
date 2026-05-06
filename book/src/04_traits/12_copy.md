@@ -1,6 +1,6 @@
-# Copying values, pt. 2
+# 复制值，第二部分 (Copying values, pt. 2)
 
-Let's consider the same example as before, but with a slight twist: using `u32` rather than `String` as a type.
+让我们看与之前相同的例子，但稍作改动：用 `u32` 代替 `String`。
 
 ```rust
 fn consumer(s: u32) { /* */ }
@@ -12,52 +12,45 @@ fn example() {
 }
 ```
 
-It'll compile without errors! What's going on here? What's the difference between `String` and `u32`
-that makes the latter work without `.clone()`?
+它能编译通过，没有错误！这是怎么回事？`String` 和 `u32` 之间有什么区别，让后者不需要 `.clone()` 就能用？
 
 ## `Copy`
 
-`Copy` is another trait defined in Rust's standard library:
+`Copy` 是 Rust 标准库中定义的另一个特质：
 
 ```rust
 pub trait Copy: Clone { }
 ```
 
-It is a marker trait, just like `Sized`.
+它是一个标记特质 (marker trait)，跟 `Sized` 一样。
 
-If a type implements `Copy`, there's no need to call `.clone()` to create a new instance of the type:
-Rust does it **implicitly** for you.\
-`u32` is an example of a type that implements `Copy`, which is why the example above compiles without errors:
-when `consumer(s)` is called, Rust creates a new `u32` instance by performing a **bitwise copy** of `s`,
-and then passes that new instance to `consumer`. It all happens behind the scenes, without you having to do anything.
+如果一个类型实现了 `Copy`，就不需要调用 `.clone()` 来创建新实例：
+Rust 会**隐式 (implicitly)** 替你完成。\
+`u32` 就是实现了 `Copy` 的类型，这就是为什么上面的例子能无错地编译：
+当 `consumer(s)` 被调用时，Rust 通过对 `s` 进行**逐位复制 (bitwise copy)** 来创建一个新的 `u32` 实例，然后把这个新实例传给 `consumer`。这一切都在幕后发生，你什么都不用做。
 
-## What can be `Copy`?
+## 什么样的类型可以 `Copy`？(What can be `Copy`?)
 
-`Copy` is not equivalent to "automatic cloning", although it implies it.\
-Types must meet a few requirements in order to be allowed to implement `Copy`.
+`Copy` 不等于"自动克隆 (automatic cloning)"，但它确实意味着这一点。\
+类型必须满足若干条件，才被允许实现 `Copy`。
 
-First of all, it must implement `Clone`, since `Copy` is a subtrait of `Clone`.
-This makes sense: if Rust can create a new instance of a type _implicitly_, it should
-also be able to create a new instance _explicitly_ by calling `.clone()`.
+首先，它必须实现 `Clone`，因为 `Copy` 是 `Clone` 的子特质。
+这是合理的：如果 Rust 能够 _隐式_ 创建该类型的新实例，那它也应当能通过调用 `.clone()` 来 _显式_ 创建。
 
-That's not all, though. A few more conditions must be met:
+但这还不够，还需要满足下面几个条件：
 
-1. The type doesn't manage any _additional_ resources (e.g. heap memory, file handles, etc.) beyond the `std::mem::size_of`
-   bytes that it occupies in memory.
-2. The type is not a mutable reference (`&mut T`).
+1. 该类型不管理任何 _额外的_ 资源（例如堆内存、文件句柄等），只占用 `std::mem::size_of` 那么多字节。
+2. 该类型不是可变引用 (`&mut T`)。
 
-If both conditions are met, then Rust can safely create a new instance of the type by performing a **bitwise copy**
-of the original instance—this is often referred to as a `memcpy` operation, after the C standard library function
-that performs the bitwise copy.
+如果两个条件都满足，那么 Rust 就可以安全地通过对原实例进行**逐位复制 (bitwise copy)** 来创建一个新实例——这通常被称为 `memcpy` 操作（得名于 C 标准库中执行逐位复制的函数）。
 
-### Case study 1: `String`
+### 案例分析 1：`String` (Case study 1: `String`)
 
-`String` is a type that doesn't implement `Copy`.\
-Why? Because it manages an additional resource: the heap-allocated memory buffer that stores the string's data.
+`String` 不实现 `Copy`。\
+为什么？因为它管理着额外资源：存储字符串数据的、堆上分配的内存缓冲区。
 
-Let's imagine that Rust allowed `String` to implement `Copy`.\
-Then, when a new `String` instance is created by performing a bitwise copy of the original instance, both the original
-and the new instance would point to the same memory buffer:
+让我们假设 Rust 允许 `String` 实现 `Copy`。\
+那当通过对原实例进行逐位复制创建新的 `String` 实例时，原实例和新实例会指向同一块内存缓冲区：
 
 ```text
               s                                 copied_s
@@ -76,34 +69,30 @@ and the new instance would point to the same memory buffer:
    +------------------------------------+
 ```
 
-This is bad!
-Both `String` instances would try to free the memory buffer when they go out of scope,
-leading to a double-free error.
-You could also create two distinct `&mut String` references that point to the same memory buffer,
-violating Rust's borrowing rules.
+这是有害的！
+两个 `String` 实例在离开作用域时都会尝试释放这同一块内存缓冲区，导致双重释放 (double-free) 错误。
+你也可以创建两个不同的 `&mut String` 引用指向同一块内存缓冲区，这就违反了 Rust 的借用规则。
 
-### Case study 2: `u32`
+### 案例分析 2：`u32` (Case study 2: `u32`)
 
-`u32` implements `Copy`. All integer types do, in fact.\
-An integer is "just" the bytes that represent the number in memory. There's nothing more!
-If you copy those bytes, you get another perfectly valid integer instance.
-Nothing bad can happen, so Rust allows it.
+`u32` 实现了 `Copy`。事实上所有整数类型都实现了。\
+整数"不过是"内存中表示该数字的那些字节，没有别的！
+如果你复制这些字节，你就得到了另一个完全有效的整数实例。
+不会出什么坏事，所以 Rust 允许它。
 
-### Case study 3: `&mut u32`
+### 案例分析 3：`&mut u32` (Case study 3: `&mut u32`)
 
-When we introduced ownership and mutable borrows, we stated one rule quite clearly: there
-can only ever be _one_ mutable borrow of a value at any given time.\
-That's why `&mut u32` doesn't implement `Copy`, even though `u32` does.
+引入所有权 (ownership) 和可变借用 (mutable borrow) 时，我们清晰地讲过一条规则：任意时刻一个值只能存在 _一个_ 可变借用。\
+这就是为什么 `&mut u32` 不实现 `Copy`，即使 `u32` 实现了。
 
-If `&mut u32` implemented `Copy`, you could create multiple mutable references to
-the same value and modify it in multiple places at the same time.
-That'd be a violation of Rust's borrowing rules!
-It follows that `&mut T` never implements `Copy`, no matter what `T` is.
+如果 `&mut u32` 实现了 `Copy`，你就能创建多个指向同一个值的可变引用，并在多个地方同时修改它。
+那就违反了 Rust 的借用规则！
+所以，无论 `T` 是什么，`&mut T` 都不实现 `Copy`。
 
-## Implementing `Copy`
+## 实现 `Copy` (Implementing `Copy`)
 
-In most cases, you don't need to manually implement `Copy`.
-You can just derive it, like this:
+大多数情况下，你不需要手动实现 `Copy`。
+直接派生即可，像这样：
 
 ```rust
 #[derive(Copy, Clone)]
@@ -111,3 +100,5 @@ struct MyStruct {
     field: u32,
 }
 ```
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/04_traits/12_copy.md)

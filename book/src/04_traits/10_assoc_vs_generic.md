@@ -1,6 +1,6 @@
-# Generics and associated types
+# 泛型与关联类型 (Generics and associated types)
 
-Let's re-examine the definition for two of the traits we studied so far, `From` and `Deref`:
+让我们重新审视前面学过的两个特质 `From` 和 `Deref` 的定义：
 
 ```rust
 pub trait From<T> {
@@ -14,28 +14,25 @@ pub trait Deref {
 }
 ```
 
-They both feature type parameters.\
-In the case of `From`, it's a generic parameter, `T`.\
-In the case of `Deref`, it's an associated type, `Target`.
+它们都包含类型参数。\
+对 `From` 来说是泛型参数 (generic parameter) `T`。\
+对 `Deref` 来说是关联类型 (associated type) `Target`。
 
-What's the difference? Why use one over the other?
+它们有什么区别？什么时候用哪个？
 
-## At most one implementation
+## 至多一个实现 (At most one implementation)
 
-Due to how deref coercion works, there can only be one "target" type for a given type. E.g. `String` can
-only deref to `str`.
-It's about avoiding ambiguity: if you could implement `Deref` multiple times for a type,
-which `Target` type should the compiler choose when you call a `&self` method?
+由于解引用强制转换 (deref coercion) 的工作机制，给定类型只能有一个"目标 (target)"类型。例如 `String` 只能解引用到 `str`。
+这是为了避免歧义：如果你能为同一个类型多次实现 `Deref`，那当你调用 `&self` 方法时，编译器该选哪个 `Target` 类型？
 
-That's why `Deref` uses an associated type, `Target`.\
-An associated type is uniquely determined **by the trait implementation**.
-Since you can't implement `Deref` more than once, you'll only be able to specify one `Target` for a given type
-and there won't be any ambiguity.
+这就是 `Deref` 使用关联类型 `Target` 的原因。\
+关联类型由**特质实现**唯一确定。
+既然 `Deref` 不能为同一类型实现多次，那对每个类型也就只能指定一个 `Target`，不会出现歧义。
 
-## Generic traits
+## 泛型特质 (Generic traits)
 
-On the other hand, you can implement `From` multiple times for a type, **as long as the input type `T` is different**.
-For example, you can implement `From` for `WrappingU32` using both `u32` and `u16` as input types:
+另一方面，你可以为同一类型多次实现 `From`，**只要输入类型 `T` 不同**。
+例如，可以为 `WrappingU32` 同时使用 `u32` 和 `u16` 作为输入类型来实现 `From`：
 
 ```rust
 impl From<u32> for WrappingU32 {
@@ -51,12 +48,12 @@ impl From<u16> for WrappingU32 {
 }
 ```
 
-This works because `From<u16>` and `From<u32>` are considered **different traits**.\
-There is no ambiguity: the compiler can determine which implementation to use based on type of the value being converted.
+这样行得通，是因为 `From<u16>` 和 `From<u32>` 被视为**不同的特质**。\
+不存在歧义：编译器可以根据被转换值的类型来确定使用哪一个实现。
 
-## Case study: `Add`
+## 案例分析：`Add` (Case study: `Add`)
 
-As a closing example, consider the `Add` trait from the standard library:
+作为收尾的例子，看看标准库中的 `Add` 特质：
 
 ```rust
 pub trait Add<RHS = Self> {
@@ -66,15 +63,15 @@ pub trait Add<RHS = Self> {
 }
 ```
 
-It uses both mechanisms:
+它同时使用了两种机制：
 
-- it has a generic parameter, `RHS` (right-hand side), which defaults to `Self`
-- it has an associated type, `Output`, the type of the result of the addition
+- 它有一个泛型参数 `RHS`（right-hand side，右操作数），默认为 `Self`
+- 它有一个关联类型 `Output`，表示加法结果的类型
 
 ### `RHS`
 
-`RHS` is a generic parameter to allow for different types to be added together.\
-For example, you'll find these two implementations in the standard library:
+`RHS` 是泛型参数，目的是允许不同类型相加。\
+例如，标准库中你能找到这两个实现：
 
 ```rust
 impl Add<u32> for u32 {
@@ -82,10 +79,9 @@ impl Add<u32> for u32 {
     
     fn add(self, rhs: u32) -> u32 {
       //                      ^^^
-      // This could be written as `Self::Output` instead.
-      // The compiler doesn't care, as long as the type you
-      // specify here matches the type you assigned to `Output` 
-      // right above.
+      // 这里也可以写成 `Self::Output`。
+      // 编译器不在乎，只要你这里写的类型
+      // 跟你上面赋给 `Output` 的类型匹配即可。
       // [...]
     }
 }
@@ -99,21 +95,20 @@ impl Add<&u32> for u32 {
 }
 ```
 
-This allows the following code to compile:
+这让下面的代码可以编译通过：
 
 ```rust
 let x = 5u32 + &5u32 + 6u32;
 ```
 
-because `u32` implements `Add<&u32>` _as well as_ `Add<u32>`.
+因为 `u32` 同时实现了 `Add<&u32>` _以及_ `Add<u32>`。
 
 ### `Output`
 
-`Output` represents the type of the result of the addition.
+`Output` 表示加法结果的类型。
 
-Why do we need `Output` in the first place? Can't we just use `Self` as output, the type implementing `Add`?
-We could, but it would limit the flexibility of the trait. In the standard library, for example, you'll find
-this implementation:
+为什么我们需要 `Output`？不能直接用 `Self`（即实现 `Add` 的类型）作为输出吗？
+能是能，但会限制特质的灵活性。例如标准库中你会看到这个实现：
 
 ```rust
 impl Add<&u32> for &u32 {
@@ -125,22 +120,19 @@ impl Add<&u32> for &u32 {
 }
 ```
 
-The type they're implementing the trait for is `&u32`, but the result of the addition is `u32`.\
-It would be impossible[^flexible] to provide this implementation if `add` had to return `Self`, i.e. `&u32` in this case.
-`Output` lets `std` decouple the implementor from the return type, thus supporting this case.
+它把特质实现在 `&u32` 上，但加法的结果是 `u32`。\
+如果 `add` 必须返回 `Self`（这里就是 `&u32`），那这个实现就不可能[^flexible]。
+`Output` 让 `std` 把实现者类型与返回类型解耦，从而支持这种情形。
 
-On the other hand, `Output` can't be a generic parameter. The output type of the operation **must** be uniquely determined
-once the types of the operands are known. That's why it's an associated type: for a given combination of implementor
-and generic parameters, there is only one `Output` type.
+另一方面，`Output` 不能是泛型参数。一旦操作数的类型确定，加法的输出类型就**必须**唯一确定。这就是为什么它是关联类型：对给定的"实现者 + 泛型参数"组合，`Output` 类型只有一种。
 
-## Conclusion
+## 总结 (Conclusion)
 
-To recap:
+回顾一下：
 
-- Use an **associated type** when the type must be uniquely determined for a given trait implementation.
-- Use a **generic parameter** when you want to allow multiple implementations of the trait for the same type,
-  with different input types.
+- 当类型必须由特定的特质实现唯一确定时，使用**关联类型 (associated type)**。
+- 当你希望允许同一类型对该特质有多个实现（输入类型不同）时，使用**泛型参数 (generic parameter)**。
 
-[^flexible]: Flexibility is rarely free: the trait definition is more complex due to `Output`, and implementors have to reason about
-what they want to return. The trade-off is only justified if that flexibility is actually needed. Keep that in mind
-when designing your own traits.
+[^flexible]: 灵活性很少是免费的：因为多了 `Output`，特质定义更复杂，实现者还得思考要返回什么。只有当这种灵活性确实需要时，这种权衡才划算。设计自己的特质时请记住这一点。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/04_traits/10_assoc_vs_generic.md)

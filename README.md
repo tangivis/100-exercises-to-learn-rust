@@ -91,21 +91,21 @@
 - [x] ✅ 03_ticket_v1/12_outro.md
 
 ### 第4章：特质 (Traits)
-- [ ] ⏸️ 04_traits/00_intro.md
-- [ ] ⏸️ 04_traits/01_trait.md
-- [ ] ⏸️ 04_traits/02_orphan_rule.md
-- [ ] ⏸️ 04_traits/03_operator_overloading.md
-- [ ] ⏸️ 04_traits/04_derive.md
-- [ ] ⏸️ 04_traits/05_trait_bounds.md
-- [ ] ⏸️ 04_traits/06_str_slice.md
-- [ ] ⏸️ 04_traits/07_deref.md
-- [ ] ⏸️ 04_traits/08_sized.md
-- [ ] ⏸️ 04_traits/09_from.md
-- [ ] ⏸️ 04_traits/10_assoc_vs_generic.md
-- [ ] ⏸️ 04_traits/11_clone.md
-- [ ] ⏸️ 04_traits/12_copy.md
-- [ ] ⏸️ 04_traits/13_drop.md
-- [ ] ⏸️ 04_traits/14_outro.md
+- [x] ✅ 04_traits/00_intro.md
+- [x] ✅ 04_traits/01_trait.md
+- [x] ✅ 04_traits/02_orphan_rule.md
+- [x] ✅ 04_traits/03_operator_overloading.md
+- [x] ✅ 04_traits/04_derive.md
+- [x] ✅ 04_traits/05_trait_bounds.md
+- [x] ✅ 04_traits/06_str_slice.md
+- [x] ✅ 04_traits/07_deref.md
+- [x] ✅ 04_traits/08_sized.md
+- [x] ✅ 04_traits/09_from.md
+- [x] ✅ 04_traits/10_assoc_vs_generic.md
+- [x] ✅ 04_traits/11_clone.md
+- [x] ✅ 04_traits/12_copy.md
+- [x] ✅ 04_traits/13_drop.md
+- [x] ✅ 04_traits/14_outro.md
 
 ### 第5章：工单 v2 (Ticket v2)
 - [ ] ⏸️ 05_ticket_v2/00_intro.md
