@@ -1,41 +1,33 @@
-# Channels
+# 通道 (Channels)
 
-All our spawned threads have been fairly short-lived so far.\
-Get some input, run a computation, return the result, shut down.
+到目前为止我们 spawn 的线程都生命周期相当短：拿到输入、做计算、返回结果、关停。
 
-For our ticket management system, we want to do something different:
-a client-server architecture.
+对我们的工单管理系统，我们想做不一样的事：客户端-服务端 (client-server) 架构。
 
-We will have **one long-running server thread**, responsible for managing
-our state, the stored tickets.
+我们将有**一个长生命周期的服务端线程**，负责管理我们的状态——存储的工单。
 
-We will then have **multiple client threads**.\
-Each client will be able to send **commands** and **queries** to
-the stateful thread, in order to change its state (e.g. add a new ticket)
-or retrieve information (e.g. get the status of a ticket).\
-Client threads will run concurrently.
+我们再有**多个客户端线程**。\
+每个客户端能向有状态的线程发送**命令 (commands)** 和**查询 (queries)**，从而改变其状态（例如新增一张工单）或检索信息（例如获取一张工单的状态）。\
+客户端线程并发运行。
 
-## Communication
+## 通信 (Communication)
 
-So far we've only had very limited parent-child communication:
+到目前为止我们仅有非常有限的父子通信：
 
-- The spawned thread borrowed/consumed data from the parent context
-- The spawned thread returned data to the parent when joined
+- 被 spawn 的线程从父上下文借用/消费数据
+- 被 spawn 的线程在 join 时把数据返还给父线程
 
-This isn't enough for a client-server design.\
-Clients need to be able to send and receive data from the server thread
-_after_ it has been launched.
+这对客户端-服务端设计是不够的。\
+客户端需要能在服务端线程被启动 _之后_ 与之收发数据。
 
-We can solve the issue using **channels**.
+我们可以用**通道 (channels)** 解决这个问题。
 
-## Channels
+## 通道 (Channels)
 
-Rust's standard library provides **multi-producer, single-consumer** (mpsc) channels
-in its `std::sync::mpsc` module.\
-There are two channel flavours: bounded and unbounded. We'll stick to the unbounded
-version for now, but we'll discuss the pros and cons later on.
+Rust 标准库在 `std::sync::mpsc` 模块中提供了**多生产者单消费者 (multi-producer, single-consumer, mpsc)** 通道。\
+通道有两种风味：有界 (bounded) 和无界 (unbounded)。我们暂时用无界版本，稍后再讨论它们的优缺点。
 
-Channel creation looks like this:
+通道创建是这样：
 
 ```rust
 use std::sync::mpsc::channel;
@@ -43,31 +35,31 @@ use std::sync::mpsc::channel;
 let (sender, receiver) = channel();
 ```
 
-You get a sender and a receiver.\
-You call `send` on the sender to push data into the channel.\
-You call `recv` on the receiver to pull data from the channel.
+你得到一个发送者 (sender) 和一个接收者 (receiver)。\
+对发送者调用 `send` 把数据推入通道。\
+对接收者调用 `recv` 从通道拉取数据。
 
-### Multiple senders
+### 多个发送者 (Multiple senders)
 
-`Sender` is clonable: we can create multiple senders (e.g. one for
-each client thread) and they will all push data into the same channel.
+`Sender` 是可克隆的：我们可以创建多个发送者（例如每个客户端线程一个），它们都会把数据推入同一个通道。
 
-`Receiver`, instead, is not clonable: there can only be a single receiver
-for a given channel.
+`Receiver` 不可克隆：一个通道只能有一个接收者。
 
-That's what **mpsc** (multi-producer single-consumer) stands for!
+这就是 **mpsc**（multi-producer single-consumer）的含义！
 
-### Message type
+### 消息类型 (Message type)
 
-Both `Sender` and `Receiver` are generic over a type parameter `T`.\
-That's the type of the _messages_ that can travel on our channel.
+`Sender` 与 `Receiver` 都对类型参数 `T` 泛型。\
+那就是能在我们通道上传输的 _消息_ 的类型。
 
-It could be a `u64`, a struct, an enum, etc.
+可以是 `u64`、结构体、枚举等。
 
-### Errors
+### 错误 (Errors)
 
-Both `send` and `recv` can fail.\
-`send` returns an error if the receiver has been dropped.\
-`recv` returns an error if all senders have been dropped and the channel is empty.
+`send` 和 `recv` 都可能失败。\
+如果接收者被丢弃，`send` 返回错误。\
+如果所有发送者都被丢弃且通道为空，`recv` 返回错误。
 
-In other words, `send` and `recv` error when the channel is effectively closed.
+换句话说，通道实际上关闭时 `send` 与 `recv` 会出错。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/07_threads/05_channels.md)

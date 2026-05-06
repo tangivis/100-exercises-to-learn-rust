@@ -1,54 +1,46 @@
-# Design review
+# 设计回顾 (Design review)
 
-Let's take a moment to review the journey we've been through.
+我们花点时间回顾走过的路。
 
-## Lockless with channel serialization
+## 无锁 + 通道串行化 (Lockless with channel serialization)
 
-Our first implementation of a multithreaded ticket store used:
+我们多线程工单存储的第一版实现使用了：
 
-- a single long-lived thread (server), to hold the shared state
-- multiple clients sending requests to it via channels from their own threads.
+- 一个长生命周期线程（服务端），持有共享状态
+- 多个客户端，从各自线程通过通道向它发送请求
 
-No locking of the state was necessary, since the server was the only one modifying the state. That's because
-the "inbox" channel naturally **serialized** incoming requests: the server would process them one by one.\
-We've already discussed the limitations of this approach when it comes to patching behaviour, but we didn't
-discuss the performance implications of the original design: the server could only process one request at a time,
-including reads.
+不需要对状态加锁，因为只有服务端在修改状态。这是因为
+"收件箱"通道天然把进入的请求**串行化 (serialized)**：服务端逐一处理。\
+我们之前讨论过这种方式在打补丁行为上的局限，但没讨论原始设计的性能影响：服务端一次只能处理一个请求，包括读。
 
-## Fine-grained locking
+## 细粒度锁 (Fine-grained locking)
 
-We then moved to a more sophisticated design, where each ticket was protected by its own lock and
-clients could independently decide if they wanted to read or atomically modify a ticket, acquiring the appropriate lock.
+随后我们转向了更复杂的设计：每张工单由自己的锁保护，客户端可以独立决定要读取还是原子修改某张工单，并获取相应的锁。
 
-This design allows for better parallelism (i.e. multiple clients can read tickets at the same time), but it is
-still fundamentally **serial**: the server processes commands one by one. In particular, it hands out locks to clients
-one by one.
+这种设计允许更好的并行性（即多个客户端可同时读取工单），但根本上仍然是**串行 (serial)** 的：服务端逐一处理命令；尤其是它逐一发放锁给客户端。
 
-Could we remove the channels entirely and allow clients to directly access the `TicketStore`, relying exclusively on
-locks to synchronize access?
+我们能不能干脆去掉通道，让客户端直接访问 `TicketStore`，纯靠锁来同步访问？
 
-## Removing channels
+## 移除通道 (Removing channels)
 
-We have two problems to solve:
+我们要解决两个问题：
 
-- Sharing `TicketStore` across threads
-- Synchronizing access to the store
+- 跨线程共享 `TicketStore`
+- 同步对 store 的访问
 
-### Sharing `TicketStore` across threads
+### 跨线程共享 `TicketStore` (Sharing `TicketStore` across threads)
 
-We want all threads to refer to the same state, otherwise we don't really have a multithreaded system—we're just
-running multiple single-threaded systems in parallel.\
-We've already encountered this problem when we tried to share a lock across threads: we can use an `Arc`.
+我们希望所有线程引用同一份状态，否则就不算真正的多线程系统——只是并行运行多个单线程系统。\
+我们之前在跨线程共享锁时已经遇到过这个问题：可以用 `Arc`。
 
-### Synchronizing access to the store
+### 同步对 store 的访问 (Synchronizing access to the store)
 
-There is one interaction that's still lockless thanks to the serialization provided by the channels: inserting
-(or removing) a ticket from the store.\
-If we remove the channels, we need to introduce (another) lock to synchronize access to the `TicketStore` itself.
+有一种交互一直靠通道串行化提供的无锁性质：往 store 里插入（或移除）工单。\
+如果我们移除通道，需要引入（另一把）锁来同步对 `TicketStore` 本身的访问。
 
-If we use a `Mutex`, then it makes no sense to use an additional `RwLock` for each ticket: the `Mutex` will
-already serialize access to the entire store, so we wouldn't be able to read tickets in parallel anyway.\
-If we use a `RwLock`, instead, we can read tickets in parallel. We just need to pause all reads while inserting
-or removing a ticket.
+如果用 `Mutex`，那就没必要再为每张工单加 `RwLock`：`Mutex` 已经把对整个 store 的访问串行化，无论如何都无法并行读取工单。\
+如果改用 `RwLock`，则可以并行读取工单，只需在插入或移除工单时暂停所有读。
 
-Let's go down this path and see where it leads us.
+让我们沿这条路走下去看看会到哪儿。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/07_threads/13_without_channels.md)

@@ -1,27 +1,24 @@
-# Update operations
+# 更新操作 (Update operations)
 
-So far we've implemented only insertion and retrieval operations.\
-Let's see how we can expand the system to provide an update operation.
+到目前为止我们只实现了插入和检索操作。\
+看看怎么把系统扩展为提供更新操作。
 
-## Legacy updates
+## 旧版的更新 (Legacy updates)
 
-In the non-threaded version of the system, updates were fairly straightforward: `TicketStore` exposed a
-`get_mut` method that allowed the caller to obtain a mutable reference to a ticket, and then modify it.
+在系统的非线程版本里，更新相当直接：`TicketStore` 暴露了一个 `get_mut` 方法，允许调用方拿到工单的可变引用并修改它。
 
-## Multithreaded updates
+## 多线程下的更新 (Multithreaded updates)
 
-The same strategy won't work in the current multithreaded version. The borrow checker would
-stop us: `SyncSender<&mut Ticket>` isn't `'static` because `&mut Ticket` doesn't satisfy the `'static` lifetime, therefore
-they can't be captured by the closure that gets passed to `std::thread::spawn`.
+同样的策略在当前的多线程版本里行不通。借用检查器会拦下我们：`SyncSender<&mut Ticket>` 不是 `'static`，因为 `&mut Ticket` 不满足 `'static` 生命周期，因此它们不能被传给 `std::thread::spawn` 的闭包捕获。
 
-There are a few ways to work around this limitation. We'll explore a few of them in the following exercises.
+要绕开这个限制有几种方式。我们会在接下来的几个练习里探索其中几种。
 
-### Patching
+### 打补丁 (Patching)
 
-We can't send a `&mut Ticket` over a channel, therefore we can't mutate on the client-side.\
-Can we mutate on the server-side?
+我们没法把 `&mut Ticket` 通过通道发送，所以无法在客户端侧进行修改。\
+那能不能在服务端侧修改？
 
-We can, if we tell the server what needs to be changed. In other words, if we send a **patch** to the server:
+可以——只要我们告诉服务端要改什么。换言之，给服务端发送一个**补丁 (patch)**：
 
 ```rust
 struct TicketPatch {
@@ -32,8 +29,10 @@ struct TicketPatch {
 }
 ```
 
-The `id` field is mandatory, since it's required to identify the ticket that needs to be updated.\
-All other fields are optional:
+`id` 字段是必需的，因为它用来识别要更新哪张工单。\
+其他字段都是可选的：
 
-- If a field is `None`, it means that the field should not be changed.
-- If a field is `Some(value)`, it means that the field should be changed to `value`.
+- 如果某字段为 `None`，意味着该字段不应被改变。
+- 如果某字段为 `Some(value)`，意味着该字段应被改为 `value`。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/07_threads/10_patch.md)

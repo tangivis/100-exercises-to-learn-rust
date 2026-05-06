@@ -1,28 +1,27 @@
 # `Sync`
 
-Before we wrap up this chapter, let's talk about another key trait in Rust's standard library: `Sync`.
+收尾本章前，我们再谈 Rust 标准库中另一个关键特质：`Sync`。
 
-`Sync` is an auto trait, just like `Send`.\
-It is automatically implemented by all types that can be safely **shared** between threads.
+`Sync` 是自动特质 (auto trait)，跟 `Send` 一样。\
+它会自动为所有可以安全地在线程间**共享 (shared)** 的类型实现。
 
-In other words: `T` is Sync if `&T` is `Send`.
+换句话说：当 `&T` 是 `Send` 时 `T` 就是 `Sync`。
 
-## `T: Sync` doesn't imply `T: Send`
+## `T: Sync` 不蕴含 `T: Send` (`T: Sync` doesn't imply `T: Send`)
 
-It's important to note that `T` can be `Sync` without being `Send`.\
-For example: `MutexGuard` is not `Send`, but it is `Sync`.
+要注意 `T` 可以是 `Sync` 而不是 `Send`。\
+例如：`MutexGuard` 不是 `Send`，但它是 `Sync`。
 
-It isn't `Send` because the lock must be released on the same thread that acquired it, therefore we don't
-want `MutexGuard` to be dropped on a different thread.\
-But it is `Sync`, because giving a `&MutexGuard` to another thread has no impact on where the lock is released.
+它不是 `Send`，是因为锁必须由获取它的同一个线程释放，因此我们不希望 `MutexGuard` 在另一个线程上被丢弃。\
+但它是 `Sync`，因为把 `&MutexGuard` 给另一个线程并不影响锁在哪儿被释放。
 
-## `T: Send` doesn't imply `T: Sync`
+## `T: Send` 不蕴含 `T: Sync` (`T: Send` doesn't imply `T: Sync`)
 
-The opposite is also true: `T` can be `Send` without being `Sync`.\
-For example: `RefCell<T>` is `Send` (if `T` is `Send`), but it is not `Sync`.
+反过来也成立：`T` 可以是 `Send` 而不是 `Sync`。\
+例如：`RefCell<T>`（当 `T` 是 `Send` 时）是 `Send`，但不是 `Sync`。
 
-`RefCell<T>` performs runtime borrow checking, but the counters it uses to track borrows are not thread-safe.
-Therefore, having multiple threads holding a `&RefCell` would lead to a data race, with potentially
-multiple threads obtaining mutable references to the same data. Hence `RefCell` is not `Sync`.\
-`Send` is fine, instead, because when we send a `RefCell` to another thread we're not
-leaving behind any references to the data it contains, hence no risk of concurrent mutable access.
+`RefCell<T>` 做运行时借用检查，但它用来跟踪借用的计数器不是线程安全的。
+因此，多个线程同时持有 `&RefCell` 会导致数据竞争 (data race)，可能多个线程同时拿到对同一数据的可变引用。所以 `RefCell` 不是 `Sync`。\
+`Send` 则没问题，因为把 `RefCell` 发到另一个线程时不会留下任何指向它内部数据的引用，因此不存在并发可变访问的风险。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/07_threads/14_sync.md)

@@ -1,6 +1,6 @@
-# Interior mutability
+# 内部可变性 (Interior mutability)
 
-Let's take a moment to reason about the signature of `Sender`'s `send`:
+我们来稍微推敲一下 `Sender` 的 `send` 签名：
 
 ```rust
 impl<T> Sender<T> {
@@ -10,105 +10,96 @@ impl<T> Sender<T> {
 }
 ```
 
-`send` takes `&self` as its argument.\
-But it's clearly causing a mutation: it's adding a new message to the channel.
-What's even more interesting is that `Sender` is cloneable: we can have multiple instances of `Sender`
-trying to modify the channel state **at the same time**, from different threads.
+`send` 接受 `&self` 作为参数。\
+但它显然在引发修改：往通道里加入了一条新消息。
+更有意思的是 `Sender` 是可克隆的：我们可以让多个 `Sender` 实例从不同线程**同时**尝试修改通道状态。
 
-That's the key property we are using to build this client-server architecture. But why does it work?
-Doesn't it violate Rust's rules about borrowing? How are we performing mutations via an _immutable_ reference?
+这是我们用来构建 client-server 架构的关键性质。但它为什么有效？
+难道这不违反 Rust 关于借用的规则吗？我们怎么能通过一个 _不可变_ 引用执行修改？
 
-## Shared rather than immutable references
+## 共享引用而非不可变引用 (Shared rather than immutable references)
 
-When we introduced the borrow-checker, we named the two types of references we can have in Rust:
+我们引入借用检查器时，把 Rust 中的两种引用命名为：
 
-- immutable references (`&T`)
-- mutable references (`&mut T`)
+- 不可变引用 (immutable references) `&T`
+- 可变引用 (mutable references) `&mut T`
 
-It would have been more accurate to name them:
+把它们叫作下列名字会更准确：
 
-- shared references (`&T`)
-- exclusive references (`&mut T`)
+- 共享引用 (shared references) `&T`
+- 独占引用 (exclusive references) `&mut T`
 
-Immutable/mutable is a mental model that works for the vast majority of cases, and it's a great one to get started
-with Rust. But it's not the whole story, as you've just seen: `&T` doesn't actually guarantee that the data it
-points to is immutable.\
-Don't worry, though: Rust is still keeping its promises.
-It's just that the terms are a bit more nuanced than they might seem at first.
+不可变/可变是一个对绝大多数情况都有效的心智模型，也是上手 Rust 时很好的一个。但它不是全貌，正如你刚刚看到的：`&T` 实际上并不保证它指向的数据不可变。\
+不过别担心：Rust 仍然在信守它的承诺。
+只是这些术语比表面看起来要更微妙。
 
 ## `UnsafeCell`
 
-Whenever a type allows you to mutate data through a shared reference, you're dealing with **interior mutability**.
+每当一个类型允许你通过共享引用修改数据时，你就在和**内部可变性 (interior mutability)** 打交道。
 
-By default, the Rust compiler assumes that shared references are immutable. It **optimises your code** based on that assumption.\
-The compiler can reorder operations, cache values, and do all sorts of magic to make your code faster.
+默认情况下，Rust 编译器假设共享引用是不可变的。它基于这个假设**优化你的代码**。\
+编译器可以重排操作、缓存值，做各种把戏让你的代码更快。
 
-You can tell the compiler "No, this shared reference is actually mutable" by wrapping the data in an `UnsafeCell`.\
-Every time you see a type that allows interior mutability, you can be certain that `UnsafeCell` is involved,
-either directly or indirectly.\
-Using `UnsafeCell`, raw pointers and `unsafe` code, you can mutate data through shared references.
+你可以通过把数据包到 `UnsafeCell` 里告诉编译器"不，这个共享引用其实是可变的"。\
+每次你看到一个允许内部可变性的类型，可以确定 `UnsafeCell` 牵涉其中——直接或间接地。\
+借助 `UnsafeCell`、原始指针和 `unsafe` 代码，你可以通过共享引用修改数据。
 
-Let's be clear, though: `UnsafeCell` isn't a magic wand that allows you to ignore the borrow-checker!\
-`unsafe` code is still subject to Rust's rules about borrowing and aliasing.
-It's an (advanced) tool that you can leverage to build **safe abstractions** whose safety can't be directly expressed
-in Rust's type system. Whenever you use the `unsafe` keyword you're telling the compiler:
-"I know what I'm doing, I won't violate your invariants, trust me."
+不过要说清楚：`UnsafeCell` 不是允许你忽略借用检查器的魔法棒！\
+`unsafe` 代码仍然受 Rust 关于借用与混叠 (aliasing) 规则的约束。
+它是一种（高级）工具，用来构建那些其安全性无法直接通过 Rust 类型系统表达的**安全抽象 (safe abstractions)**。每次你使用 `unsafe` 关键字，等于在告诉编译器："我知道我在做什么，不会违反你的不变量，相信我。"
 
-Every time you call an `unsafe` function, there will be documentation explaining its **safety preconditions**:
-under what circumstances it's safe to execute its `unsafe` block. You can find the ones for `UnsafeCell`
-[in `std`'s documentation](https://doc.rust-lang.org/std/cell/struct.UnsafeCell.html).
+每次你调用一个 `unsafe` 函数，文档都会说明它的**安全前置条件 (safety preconditions)**：
+执行其 `unsafe` 块要满足什么条件才安全。`UnsafeCell` 的可在 [`std` 文档](https://doc.rust-lang.org/std/cell/struct.UnsafeCell.html) 找到。
 
-We won't be using `UnsafeCell` directly in this course, nor will we be writing `unsafe` code.
-But it's important to know that it's there, why it exists and how it relates to the types you use
-every day in Rust.
+我们这门课不会直接使用 `UnsafeCell`，也不会写 `unsafe` 代码。
+但了解它存在、为什么存在以及它跟你日常使用的 Rust 类型有何关系，是重要的。
 
-## Key examples
+## 关键例子 (Key examples)
 
-Let's go through a couple of important `std` types that leverage interior mutability.\
-These are types that you'll encounter somewhat often in Rust code, especially if you peek under the hood of
-some the libraries you use.
+我们看几个利用内部可变性的重要 `std` 类型。\
+它们是你在 Rust 代码中相当常见的类型，特别是当你揭开你使用的库的盖子时。
 
-### Reference counting
+### 引用计数 (Reference counting)
 
-`Rc` is a reference-counted pointer.\
-It wraps around a value and keeps track of how many references to the value exist.
-When the last reference is dropped, the value is deallocated.\
-The value wrapped in an `Rc` is immutable: you can only get shared references to it.
+`Rc` 是一个引用计数指针。\
+它包裹一个值，并跟踪有多少个对该值的引用存在。
+当最后一个引用被丢弃时，该值被释放。\
+被 `Rc` 包裹的值是不可变的：你只能得到对它的共享引用。
 
 ```rust
 use std::rc::Rc;
 
 let a: Rc<String> = Rc::new("My string".to_string());
-// Only one reference to the string data exists.
+// 字符串数据只有一个引用。
 assert_eq!(Rc::strong_count(&a), 1);
 
-// When we call `clone`, the string data is not copied!
-// Instead, the reference count for `Rc` is incremented.
+// 调用 `clone` 不会复制字符串数据！
+// 只是把 `Rc` 的引用计数加 1。
 let b = Rc::clone(&a);
 assert_eq!(Rc::strong_count(&a), 2);
 assert_eq!(Rc::strong_count(&b), 2);
-// ^ Both `a` and `b` point to the same string data
-//   and share the same reference counter.
+// ^ `a` 和 `b` 都指向同一份字符串数据
+//   并共享同一个引用计数器。
 ```
 
-`Rc` uses `UnsafeCell` internally to allow shared references to increment and decrement the reference count.
+`Rc` 内部用 `UnsafeCell` 来允许共享引用增减引用计数。
 
 ### `RefCell`
 
-`RefCell` is one of the most common examples of interior mutability in Rust.
-It allows you to mutate the value wrapped in a `RefCell` even if you only have an
-immutable reference to the `RefCell` itself.
+`RefCell` 是 Rust 中内部可变性最常见的例子之一。
+它允许你在只持有 `RefCell` 的不可变引用时，仍能修改被 `RefCell` 包裹的值。
 
-This is done via **runtime borrow checking**.
-The `RefCell` keeps track of the number (and type) of references to the value it contains at runtime.
-If you try to borrow the value mutably while it's already borrowed immutably,
-the program will panic, ensuring that Rust's borrowing rules are always enforced.
+这是通过**运行时借用检查 (runtime borrow checking)** 实现的。
+`RefCell` 在运行时跟踪它所包含值的引用数量（与类型）。
+如果你尝试在已存在不可变借用时再做可变借用，程序会 panic，确保 Rust 的借用规则始终被强制执行。
 
 ```rust
 use std::cell::RefCell;
 
 let x = RefCell::new(42);
 
-let y = x.borrow(); // Immutable borrow
-let z = x.borrow_mut(); // Panics! There is an active immutable borrow.
+let y = x.borrow(); // 不可变借用
+let z = x.borrow_mut(); // panic！已有活跃的不可变借用。
 ```
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/07_threads/06_interior_mutability.md)

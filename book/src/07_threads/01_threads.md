@@ -1,27 +1,22 @@
-# Threads
+# 线程 (Threads)
 
-Before we start writing multithreaded code, let's take a step back and talk about what threads are
-and why we might want to use them.
+在我们开始写多线程代码之前，先退一步谈谈线程是什么、我们为什么要用它。
 
-## What is a thread?
+## 什么是线程？(What is a thread?)
 
-A **thread** is an execution context managed by the underlying operating system.\
-Each thread has its own stack and instruction pointer.
+**线程 (thread)** 是由底层操作系统管理的执行上下文。\
+每个线程有自己的栈和指令指针 (instruction pointer)。
 
-A single **process** can manage multiple threads.
-These threads share the same memory space, which means they can access the same data.
+一个**进程 (process)** 可以管理多个线程。
+这些线程共享同一片内存空间，意味着它们可以访问同样的数据。
 
-Threads are a **logical** construct. In the end, you can only run one set of instructions
-at a time on a CPU core, the **physical** execution unit.\
-Since there can be many more threads than there are CPU cores, the operating system's
-**scheduler** is in charge of deciding which thread to run at any given time,
-partitioning CPU time among them to maximize throughput and responsiveness.
+线程是**逻辑 (logical)** 构造。最终，CPU 核心（**物理 (physical)** 执行单元）一次只能运行一组指令。\
+由于线程数可能远多于 CPU 核心数，操作系统的**调度器 (scheduler)** 负责决定在任意时刻运行哪个线程，把 CPU 时间在它们之间划分以最大化吞吐量和响应性。
 
 ## `main`
 
-When a Rust program starts, it runs on a single thread, the **main thread**.\
-This thread is created by the operating system and is responsible for running the `main`
-function.
+Rust 程序启动时，运行在单个线程上——**主线程 (main thread)**。\
+这个线程由操作系统创建，负责运行 `main` 函数。
 
 ```rust
 use std::thread;
@@ -37,14 +32,13 @@ fn main() {
 
 ## `std::thread`
 
-Rust's standard library provides a module, `std::thread`, that allows you to create
-and manage threads.
+Rust 标准库提供了 `std::thread` 模块，允许你创建和管理线程。
 
 ### `spawn`
 
-You can use `std::thread::spawn` to create new threads and execute code on them.
+可以用 `std::thread::spawn` 创建新线程并在其上执行代码。
 
-For example:
+例如：
 
 ```rust
 use std::thread;
@@ -65,14 +59,13 @@ fn main() {
 }
 ```
 
-If you execute this program on the [Rust playground](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=afedf7062298ca8f5a248bc551062eaa)
-you'll see that the main thread and the spawned thread run concurrently.\
-Each thread makes progress independently of the other.
+如果你在 [Rust playground](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=afedf7062298ca8f5a248bc551062eaa) 上执行这段程序，
+你会看到主线程和被 spawn 出来的线程并发运行，各自独立地推进。
 
-### Process termination
+### 进程终止 (Process termination)
 
-When the main thread finishes, the overall process will exit.\
-A spawned thread will continue running until it finishes or the main thread finishes.
+主线程结束时，整个进程也会退出。\
+被 spawn 的线程会一直运行，直到它自己结束或主线程结束。
 
 ```rust
 use std::thread;
@@ -90,13 +83,12 @@ fn main() {
 }
 ```
 
-In the example above, you can expect to see the message "Hello from a thread!" printed roughly five times.\
-Then the main thread will finish (when the `sleep` call returns), and the spawned thread will be terminated
-since the overall process exits.
+上面的例子中，你应当能看到 "Hello from a thread!" 大约被打印 5 次。\
+然后主线程结束（`sleep` 调用返回时），而被 spawn 的线程也会因为整个进程退出而被终止。
 
 ### `join`
 
-You can also wait for a spawned thread to finish by calling the `join` method on the `JoinHandle` that `spawn` returns.
+你也可以通过对 `spawn` 返回的 `JoinHandle` 调用 `join` 方法来等待 spawn 的线程结束。
 
 ```rust
 use std::thread;
@@ -109,7 +101,7 @@ fn main() {
 }
 ```
 
-In this example, the main thread will wait for the spawned thread to finish before exiting.\
-This introduces a form of **synchronization** between the two threads: you're guaranteed to see the message
-"Hello from a thread!" printed before the program exits, because the main thread won't exit
-until the spawned thread has finished.
+这个例子里，主线程会等被 spawn 的线程完成后再退出。\
+这就在两个线程之间引入了一种**同步 (synchronization)** 形式：你可以确保程序退出之前一定能看到 "Hello from a thread!"，因为主线程要等到被 spawn 的线程结束才会退出。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/07_threads/01_threads.md)
