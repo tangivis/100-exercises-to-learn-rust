@@ -1,20 +1,20 @@
-# Traits
+# 特质 (Traits)
 
-In the previous chapter we covered the basics of Rust's type and ownership system.\
-It's time to dig deeper: we'll explore **traits**, Rust's take on interfaces.
+上一章我们覆盖了 Rust 类型系统和所有权 (ownership) 系统的基础。\
+现在该深入挖掘了：我们要探索**特质 (trait)**——Rust 对接口 (interface) 的诠释。
 
-Once you learn about traits, you'll start seeing their fingerprints all over the place.\
-In fact, you've already seen traits in action throughout the previous chapter, e.g. `.into()` invocations as well
-as operators like `==` and `+`.
+一旦你了解了特质，就会开始在各处看到它们的影子。\
+事实上，前一章你已经在不断接触特质了，例如 `.into()` 调用以及 `==`、`+` 这类运算符。
 
-On top of traits as a concept, we'll also cover some of the key traits that are defined in Rust's standard library:
+除了把特质作为一个概念讨论之外，本章还会覆盖 Rust 标准库 (standard library) 中定义的几个关键特质：
 
-- Operator traits (e.g. `Add`, `Sub`, `PartialEq`, etc.)
-- `From` and `Into`, for infallible conversions
-- `Clone` and `Copy`, for copying values
-- `Deref` and deref coercion
-- `Sized`, to mark types with a known size
-- `Drop`, for custom cleanup logic
+- 运算符特质（例如 `Add`、`Sub`、`PartialEq` 等）
+- `From` 与 `Into`，用于不会失败的转换 (infallible conversions)
+- `Clone` 与 `Copy`，用于复制值
+- `Deref` 与解引用强制转换 (deref coercion)
+- `Sized`，用于标记大小已知的类型
+- `Drop`，用于自定义清理逻辑
 
-Since we'll be talking about conversions, we'll seize the opportunity to plug some of the "knowledge gaps"
-from the previous chapter—e.g. what is `"A title"`, exactly? Time to learn more about slices too!
+既然要谈到类型转换，我们也会顺便填补上一章遗留的一些"知识空白"——比如 `"A title"` 究竟是什么？是时候多了解一下切片 (slice) 了！
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/04_traits/00_intro.md)

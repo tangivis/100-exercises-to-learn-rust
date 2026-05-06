@@ -1,22 +1,18 @@
 # `Sized`
 
-There's more to `&str` than meets the eye, even after having
-investigated deref coercion.\
-From our previous [discussion on memory layouts](../03_ticket_v1/10_references_in_memory.md),
-it would have been reasonable to expect `&str` to be represented as a single `usize` on
-the stack, a pointer. That's not the case though. `&str` stores some **metadata** next
-to the pointer: the length of the slice it points to. Going back to the example from
-[a previous section](06_str_slice.md):
+即便研究过解引用强制转换 (deref coercion)，`&str` 仍然有一些没暴露出来的细节。\
+基于我们[前面关于内存布局的讨论](../03_ticket_v1/10_references_in_memory.md)，
+本来合理的预期是 `&str` 在栈上表示为单个 `usize`——一个指针。但事实并非如此。`&str` 在指针旁还存了一些**元数据 (metadata)**：它指向的切片的长度。回到[前一节](06_str_slice.md)的例子：
 
 ```rust
 let mut s = String::with_capacity(5);
 s.push_str("Hello");
-// Create a string slice reference from the `String`, 
-// skipping the first byte.
+// 从 `String` 创建一个字符串切片引用，
+// 跳过第一个字节。
 let slice: &str = &s[1..];
 ```
 
-In memory, we get:
+在内存里，我们得到：
 
 ```text
                     s                              slice
@@ -35,46 +31,44 @@ Heap:    | H | e | l | l | o |                  |
                +--------------------------------+
 ```
 
-What's going on?
+这是怎么回事？
 
-## Dynamically sized types
+## 动态尺寸类型 (Dynamically sized types)
 
-`str` is a **dynamically sized type** (DST).\
-A DST is a type whose size is not known at compile time. Whenever you have a
-reference to a DST, like `&str`, it has to include additional
-information about the data it points to. It is a **fat pointer**.\
-In the case of `&str`, it stores the length of the slice it points to.
-We'll see more examples of DSTs in the rest of the course.
+`str` 是一种**动态尺寸类型 (dynamically sized type, DST)**。\
+DST 的大小在编译期是未知的。每当你持有对 DST 的引用——例如 `&str`——它必须包含关于其所指数据的额外信息。这就是**胖指针 (fat pointer)**。\
+在 `&str` 的情形下，它存储了它所指切片的长度。
+我们会在课程后面看到更多 DST 的例子。
 
-## The `Sized` trait
+## `Sized` 特质 (The `Sized` trait)
 
-Rust's `std` library defines a trait called `Sized`.
+Rust 的 `std` 库定义了一个名为 `Sized` 的特质。
 
 ```rust
 pub trait Sized {
-    // This is an empty trait, no methods to implement.
+    // 这是个空特质，没有任何方法要实现。
 }
 ```
 
-A type is `Sized` if its size is known at compile time. In other words, it's not a DST.
+如果一个类型的大小在编译期已知，它就是 `Sized` 的。换句话说，它不是 DST。
 
-### Marker traits
+### 标记特质 (Marker traits)
 
-`Sized` is your first example of a **marker trait**.\
-A marker trait is a trait that doesn't require any methods to be implemented. It doesn't define any behavior.
-It only serves to **mark** a type as having certain properties.
-The mark is then leveraged by the compiler to enable certain behaviors or optimizations.
+`Sized` 是你接触到的第一个**标记特质 (marker trait)**。\
+标记特质不要求实现任何方法，也不定义任何行为。
+它只用来**标记 (mark)** 一个类型具有某些性质。
+然后编译器利用这个标记来启用某些行为或优化。
 
-### Auto traits
+### 自动特质 (Auto traits)
 
-In particular, `Sized` is also an **auto trait**.\
-You don't need to implement it explicitly; the compiler implements it automatically for you
-based on the type's definition.
+特别地，`Sized` 也是一个**自动特质 (auto trait)**。\
+你不需要显式实现它，编译器会根据类型的定义自动为你实现。
 
-### Examples
+### 例子 (Examples)
 
-All the types we've seen so far are `Sized`: `u32`, `String`, `bool`, etc.
+到目前为止我们见过的所有类型都是 `Sized`：`u32`、`String`、`bool` 等等。
 
-`str`, as we just saw, is not `Sized`.\
-`&str` is `Sized` though! We know its size at compile time: two `usize`s, one for the pointer
-and one for the length.
+`str`，正如刚才所见，不是 `Sized` 的。\
+不过 `&str` 是 `Sized` 的！我们在编译期就知道它的大小：两个 `usize`，一个用于指针，一个用于长度。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/04_traits/08_sized.md)

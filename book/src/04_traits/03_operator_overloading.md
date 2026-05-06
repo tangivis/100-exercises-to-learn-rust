@@ -1,56 +1,53 @@
-# Operator overloading
+# 运算符重载 (Operator overloading)
 
-Now that we have a basic understanding of what traits are, let's circle back to **operator overloading**.
-Operator overloading is the ability to define custom behavior for operators like `+`, `-`, `*`, `/`, `==`, `!=`, etc.
+现在我们对特质 (trait) 有了基本的理解，让我们回到**运算符重载 (operator overloading)**。
+运算符重载是为 `+`、`-`、`*`、`/`、`==`、`!=` 等运算符定义自定义行为的能力。
 
-## Operators are traits
+## 运算符就是特质 (Operators are traits)
 
-In Rust, operators are traits.\
-For each operator, there is a corresponding trait that defines the behavior of that operator.
-By implementing that trait for your type, you **unlock** the usage of the corresponding operators.
+在 Rust 中，运算符就是特质。\
+对于每个运算符，都有一个对应的特质来定义它的行为。
+通过为你的类型实现该特质，你就**解锁**了相应运算符的使用。
 
-For example, the [`PartialEq` trait](https://doc.rust-lang.org/std/cmp/trait.PartialEq.html) defines the behavior of
-the `==` and `!=` operators:
+例如，[`PartialEq` 特质](https://doc.rust-lang.org/std/cmp/trait.PartialEq.html)定义了 `==` 和 `!=` 运算符的行为：
 
 ```rust
-// The `PartialEq` trait definition, from Rust's standard library
-// (It is *slightly* simplified, for now)
+// `PartialEq` 特质的定义，来自 Rust 标准库
+//（这里*稍微*简化了一下，暂时只看核心部分）
 pub trait PartialEq {
-    // Required method
+    // 必须实现的方法
     //
-    // `Self` is a Rust keyword that stands for 
-    // "the type that is implementing the trait"
+    // `Self` 是 Rust 关键字，代表
+    // "正在实现该特质的那个类型"
     fn eq(&self, other: &Self) -> bool;
 
-    // Provided method
+    // 提供的方法（已带默认实现）
     fn ne(&self, other: &Self) -> bool { ... }
 }
 ```
 
-When you write `x == y` the compiler will look for an implementation of the `PartialEq` trait for the types of `x` and `y`
-and replace `x == y` with `x.eq(y)`. It's syntactic sugar!
+当你写 `x == y` 时，编译器会查找 `x` 和 `y` 类型的 `PartialEq` 实现，并把 `x == y` 替换为 `x.eq(y)`。这是语法糖 (syntactic sugar)！
 
-This is the correspondence for the main operators:
+主要运算符与特质的对应关系如下：
 
-| Operator                 | Trait                                                                   |
+| 运算符                   | 特质                                                                    |
 | ------------------------ | ----------------------------------------------------------------------- |
 | `+`                      | [`Add`](https://doc.rust-lang.org/std/ops/trait.Add.html)               |
 | `-`                      | [`Sub`](https://doc.rust-lang.org/std/ops/trait.Sub.html)               |
 | `*`                      | [`Mul`](https://doc.rust-lang.org/std/ops/trait.Mul.html)               |
 | `/`                      | [`Div`](https://doc.rust-lang.org/std/ops/trait.Div.html)               |
 | `%`                      | [`Rem`](https://doc.rust-lang.org/std/ops/trait.Rem.html)               |
-| `==` and `!=`            | [`PartialEq`](https://doc.rust-lang.org/std/cmp/trait.PartialEq.html)   |
-| `<`, `>`, `<=`, and `>=` | [`PartialOrd`](https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html) |
+| `==` 与 `!=`             | [`PartialEq`](https://doc.rust-lang.org/std/cmp/trait.PartialEq.html)   |
+| `<`、`>`、`<=`、`>=`     | [`PartialOrd`](https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html) |
 
-Arithmetic operators live in the [`std::ops`](https://doc.rust-lang.org/std/ops/index.html) module,
-while comparison ones live in the [`std::cmp`](https://doc.rust-lang.org/std/cmp/index.html) module.
+算术运算符位于 [`std::ops`](https://doc.rust-lang.org/std/ops/index.html) 模块下，
+比较运算符位于 [`std::cmp`](https://doc.rust-lang.org/std/cmp/index.html) 模块下。
 
-## Default implementations
+## 默认实现 (Default implementations)
 
-The comment on `PartialEq::ne` states that "`ne` is a provided method".\
-It means that `PartialEq` provides a **default implementation** for `ne` in the trait definition—the `{ ... }` elided
-block in the definition snippet.\
-If we expand the elided block, it looks like this:
+`PartialEq::ne` 上的注释说 "`ne` 是一个 provided method"。\
+意思是 `PartialEq` 在特质定义中为 `ne` 提供了**默认实现 (default implementation)**——也就是上面定义里被省略的 `{ ... }` 代码块。\
+把那段省略的代码块展开后，它看起来是这样：
 
 ```rust
 pub trait PartialEq {
@@ -62,9 +59,8 @@ pub trait PartialEq {
 }
 ```
 
-It's what you expect: `ne` is the negation of `eq`.\
-Since a default implementation is provided, you can skip implementing `ne` when you implement `PartialEq` for your type.
-It's enough to implement `eq`:
+跟你预期的一样：`ne` 就是 `eq` 的取反。\
+既然提供了默认实现，当你为自己的类型实现 `PartialEq` 时就可以省略 `ne`，只实现 `eq` 就够了：
 
 ```rust
 struct WrappingU8 {
@@ -76,23 +72,25 @@ impl PartialEq for WrappingU8 {
         self.inner == other.inner
     }
     
-    // No `ne` implementation here
+    // 这里没有 `ne` 实现
 }
 ```
 
-You are not forced to use the default implementation though.
-You can choose to override it when you implement the trait:
+不过你也不是非得用默认实现。
+实现特质时你可以选择覆盖它：
 
 ```rust
 struct MyType;
 
 impl PartialEq for MyType {
     fn eq(&self, other: &MyType) -> bool {
-        // Custom implementation
+        // 自定义实现
     }
 
     fn ne(&self, other: &MyType) -> bool {
-        // Custom implementation
+        // 自定义实现
     }
 }
 ```
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/04_traits/03_operator_overloading.md)
