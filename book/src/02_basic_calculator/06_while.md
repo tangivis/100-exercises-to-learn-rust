@@ -1,40 +1,40 @@
-# Loops, part 1: `while`
+# 循环，第一部分：`while` (Loops, part 1)
 
-Your implementation of `factorial` has been forced to use recursion.\
-This may feel natural to you, especially if you're coming from a functional programming background.
-Or it may feel strange, if you're used to more imperative languages like C or Python.
+你之前对 `factorial` 的实现被迫使用了递归 (recursion)。\
+如果你来自函数式编程 (functional programming) 背景，这可能让你感觉很自然。
+但如果你习惯了 C 或 Python 这类更偏命令式 (imperative) 的语言，可能会觉得有些奇怪。
 
-Let's see how you can implement the same functionality using a **loop** instead.
+让我们看看如何用**循环 (loop)** 来实现相同的功能。
 
-## The `while` loop
+## `while` 循环
 
-A `while` loop is a way to execute a block of code as long as a **condition** is true.\
-Here's the general syntax:
+`while` 循环是一种只要**条件 (condition)** 为真就持续执行代码块的方式。\
+通用语法如下：
 
 ```rust
 while <condition> {
-    // code to execute
+    // 要执行的代码
 }
 ```
 
-For example, we might want to sum the numbers from 1 to 5:
+例如，我们可能想要对 1 到 5 之间的数字求和：
 
 ```rust
 let sum = 0;
 let i = 1;
-// "while i is less than or equal to 5"
+// "当 i 小于或等于 5 时"
 while i <= 5 {
-    // `+=` is a shorthand for `sum = sum + i`
+    // `+=` 是 `sum = sum + i` 的简写
     sum += i;
     i += 1;
 }
 ```
 
-This will keep adding 1 to `i` and `i` to `sum` until `i` is no longer less than or equal to 5.
+这段代码会不断地给 `i` 加 1，并把 `i` 加到 `sum` 上，直到 `i` 不再小于或等于 5。
 
-## The `mut` keyword
+## `mut` 关键字
 
-The example above won't compile as is. You'll get an error like:
+上面的例子按原样是无法编译的。你会得到类似这样的错误：
 
 ```text
 error[E0384]: cannot assign twice to immutable variable `sum`
@@ -62,13 +62,13 @@ error[E0384]: cannot assign twice to immutable variable `i`
   |         ^^^^^^ cannot assign twice to immutable variable
 ```
 
-This is because variables in Rust are **immutable** by default.\
-You can't change their value once it has been assigned.
+这是因为 Rust 中的变量默认是**不可变的 (immutable)**。\
+一旦赋值后，你就不能再改变它们的值。
 
-If you want to allow modifications, you have to declare the variable as **mutable** using the `mut` keyword:
+如果你希望允许修改，必须使用 `mut` 关键字将变量声明为**可变的 (mutable)**：
 
 ```rust
-// `sum` and `i` are mutable now!
+// `sum` 和 `i` 现在是可变的了！
 let mut sum = 0;
 let mut i = 1;
 
@@ -78,8 +78,10 @@ while i <= 5 {
 }
 ```
 
-This will compile and run without errors.
+这样就可以正常编译并运行了。
 
-## Further reading
+## 进一步阅读
 
-- [`while` loop documentation](https://doc.rust-lang.org/std/keyword.while.html)
+- [`while` 循环文档](https://doc.rust-lang.org/std/keyword.while.html)
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/02_basic_calculator/06_while.md)

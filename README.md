@@ -5,7 +5,8 @@
 你听说过Rust，但从未有机会尝试？
 这门课程就是为你准备的！
 
-你将通过解决100个练习来学习Rust。\n你将从对Rust一无所知到能够开始编写自己的程序，一次一个练习。
+你将通过解决100个练习来学习Rust。\
+你将从对Rust一无所知到能够开始编写自己的程序，一次一个练习。
 
 > [!NOTE]
 > 本课程由 [Mainmatter](https://mainmatter.com/rust-consulting/) 编写。\
@@ -68,11 +69,11 @@
 - [x] ✅ 02_basic_calculator/03_if_else.md
 - [x] ✅ 02_basic_calculator/04_panics.md
 - [x] ✅ 02_basic_calculator/05_factorial.md
-- [ ] ⏸️ 02_basic_calculator/06_while.md
-- [ ] ⏸️ 02_basic_calculator/07_for.md
-- [ ] ⏸️ 02_basic_calculator/08_overflow.md
-- [ ] ⏸️ 02_basic_calculator/09_saturating.md
-- [ ] ⏸️ 02_basic_calculator/10_as_casting.md
+- [x] ✅ 02_basic_calculator/06_while.md
+- [x] ✅ 02_basic_calculator/07_for.md
+- [x] ✅ 02_basic_calculator/08_overflow.md
+- [x] ✅ 02_basic_calculator/09_saturating.md
+- [x] ✅ 02_basic_calculator/10_as_casting.md
 
 ### 第3章：工单 v1 (Ticket v1)
 - [ ] ⏸️ 03_ticket_v1/00_intro.md

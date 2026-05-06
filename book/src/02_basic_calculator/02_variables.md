@@ -92,4 +92,4 @@ help: consider assigning a value
 
 [^speed]: 当涉及到编译速度时，Rust 编译器 (compiler) 需要所有能得到的帮助。
 
-> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/tree/main/book/src/02_basic_calculator/02_variables.md)
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/02_basic_calculator/02_variables.md)

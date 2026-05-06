@@ -1,4 +1,4 @@
-# 类型 (Types)，第一部分
+# 类型，第一部分 (Types, part 1)
 
 在["语法"章节](../01_intro/01_syntax.md)中，`compute` 的输入参数类型为 `u32`。\
 让我们来详细解释一下这_意味着_什么。
@@ -42,13 +42,13 @@ Rust 支持多种位宽的整数：`8`、`16`、`32`、`64`、`128`。
 
 结合两个变量（有符号/无符号和位宽），我们得到以下整数类型：
 
-| Bit width | Signed | Unsigned |
-| --------- | ------ | -------- |
-| 8-bit     | `i8`   | `u8`     |
-| 16-bit    | `i16`  | `u16`    |
-| 32-bit    | `i32`  | `u32`    |
-| 64-bit    | `i64`  | `u64`    |
-| 128-bit   | `i128` | `u128`   |
+| 位宽 (Bit width) | 有符号 (Signed) | 无符号 (Unsigned) |
+| ---------------- | --------------- | ----------------- |
+| 8 位             | `i8`            | `u8`              |
+| 16 位            | `i16`           | `u16`             |
+| 32 位            | `i32`           | `u32`             |
+| 64 位            | `i64`           | `u64`             |
+| 128 位           | `i128`          | `u128`            |
 
 ## 字面量 (Literals)
 
@@ -113,7 +113,7 @@ error[E0308]: mismatched types
 
 我们将在本课程的[后面部分](../04_traits/09_from.md)看到如何在类型之间进行转换。
 
-## 延伸阅读 (Further reading)
+## 进一步阅读
 
 - [Rust 官方书籍中的整数类型章节](https://doc.rust-lang.org/book/ch03-02-data-types.html#integer-types)
 
@@ -125,4 +125,4 @@ error[E0308]: mismatched types
 [^coercion]: 这个规则有一些例外，主要与引用、智能指针和人体工程学有关。我们将在[稍后介绍](../04_traits/07_deref.md)。
 "所有转换都是显式的"这个心理模型在现阶段会对你很有帮助。
 
-> 原文链接：[英文原文](https://rust-exercises.com/100-exercises/02_basic_calculator/01_integers)
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/02_basic_calculator/01_integers.md)
