@@ -1,6 +1,6 @@
-# Fallibility
+# 可能失败 (Fallibility)
 
-Let's revisit the `Ticket::new` function from the previous exercise:
+让我们重新审视前一个练习中的 `Ticket::new` 函数：
 
 ```rust
 impl Ticket {
@@ -31,14 +31,14 @@ impl Ticket {
 }
 ```
 
-As soon as one of the checks fails, the function panics.
-This is not ideal, as it doesn't give the caller a chance to **handle the error**.
+只要其中一项检查失败，函数就 panic。
+这样并不理想，因为它没有给调用方**处理错误 (handle the error)** 的机会。
 
-It's time to introduce the `Result` type, Rust's primary mechanism for error handling.
+是时候介绍 `Result` 类型了——Rust 用来处理错误的主要机制。
 
-## The `Result` type
+## `Result` 类型 (The `Result` type)
 
-The `Result` type is an enum defined in the standard library:
+`Result` 类型是定义在标准库中的枚举：
 
 ```rust
 enum Result<T, E> {
@@ -47,42 +47,42 @@ enum Result<T, E> {
 }
 ```
 
-It has two variants:
+它有两个变体：
 
-- `Ok(T)`: represents a successful operation. It holds `T`, the output of the operation.
-- `Err(E)`: represents a failed operation. It holds `E`, the error that occurred.
+- `Ok(T)`：表示操作成功。携带 `T`，即操作的输出。
+- `Err(E)`：表示操作失败。携带 `E`，即发生的错误。
 
-Both `Ok` and `Err` are generic, allowing you to specify your own types for the success and error cases.
+`Ok` 和 `Err` 都是泛型的，让你可以为成功和失败两种情况分别指定自己的类型。
 
-## No exceptions
+## 没有异常 (No exceptions)
 
-Recoverable errors in Rust are **represented as values**.\
-They're just an instance of a type, being passed around and manipulated like any other value.
-This is a significant difference from other languages, such as Python or C#, where **exceptions** are used to signal errors.
+Rust 中的可恢复错误 (recoverable errors) 被**表示为值 (represented as values)**。\
+它们就是某个类型的实例，被传递、被操作，跟其他任何值一样。
+这与 Python、C# 等使用**异常 (exception)** 来发出错误信号的语言有显著区别。
 
-Exceptions create a separate control flow path that can be hard to reason about.\
-You don't know, just by looking at a function's signature, if it can throw an exception or not.
-You don't know, just by looking at a function's signature, **which** exception types it can throw.\
-You must either read the function's documentation or look at its implementation to find out.
+异常会创建一条独立的控制流路径，难以推理。\
+仅看一个函数的签名，你不知道它是否会抛出异常。
+仅看签名，你不知道它会抛出**哪种**异常。\
+你必须读文档或看实现才能弄清楚。
 
-Exception handling logic has very poor locality: the code that throws the exception is far removed from the code
-that catches it, and there's no direct link between the two.
+异常处理逻辑的局部性 (locality) 很差：抛异常的代码跟捕异常的代码相距甚远，二者之间没有直接的关联。
 
-## Fallibility is encoded in the type system
+## 可能失败被编码到类型系统中 (Fallibility is encoded in the type system)
 
-Rust, with `Result`, forces you to **encode fallibility in the function's signature**.\
-If a function can fail (and you want the caller to have a shot at handling the error), it must return a `Result`.
+Rust 用 `Result` 强制你**把可能失败编码进函数签名**。\
+如果一个函数可能失败（且你希望调用方有机会处理错误），它必须返回 `Result`。
 
 ```rust
-// Just by looking at the signature, you know that this function 
-// can fail. You can also inspect `ParseIntError` to see what 
-// kind of failures to expect.
+// 仅看签名你就知道这个函数可能失败。
+// 你也可以查看 `ParseIntError` 看会出现什么类型的失败。
 fn parse_int(s: &str) -> Result<i32, ParseIntError> {
     // ...
 }
 ```
 
-That's the big advantage of `Result`: it makes fallibility explicit.
+这就是 `Result` 的最大优势：让可能失败显式化。
 
-Keep in mind, though, that panics exist. They aren't tracked by the type system, just like exceptions in other languages.
-But they're meant for **unrecoverable errors** and should be used sparingly.
+不过请记住 panic 是存在的。它跟其他语言的异常一样，不被类型系统跟踪。
+但它们是为**不可恢复错误 (unrecoverable errors)** 准备的，应当谨慎使用。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/05_ticket_v2/06_fallibility.md)

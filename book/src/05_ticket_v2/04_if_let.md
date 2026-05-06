@@ -1,6 +1,6 @@
-# Concise branching
+# 简洁的分支 (Concise branching)
 
-Your solution to the previous exercise probably looks like this:
+你对前一个练习的解决方案大概是这样：
 
 ```rust
 impl Ticket {
@@ -18,17 +18,16 @@ impl Ticket {
 }
 ```
 
-You only care about the `Status::InProgress` variant.
-Do you really need to match on all the other variants?
+你只关心 `Status::InProgress` 这一个变体。
+真的有必要把所有其他变体都列出来匹配吗？
 
-New constructs to the rescue!
+新构造来救场！
 
 ## `if let`
 
-The `if let` construct allows you to match on a single variant of an enum,
-without having to handle all the other variants.
+`if let` 构造允许你只匹配枚举的一个变体，而无需处理其他所有变体。
 
-Here's how you can use `if let` to simplify the `assigned_to` method:
+下面用 `if let` 简化 `assigned_to` 方法：
 
 ```rust
 impl Ticket {
@@ -46,8 +45,7 @@ impl Ticket {
 
 ## `let/else`
 
-If the `else` branch is meant to return early (a panic counts as returning early!),
-you can use the `let/else` construct:
+如果 `else` 分支注定要提前返回（panic 也算提前返回！），可以使用 `let/else` 构造：
 
 ```rust
 impl Ticket {
@@ -62,12 +60,11 @@ impl Ticket {
 }
 ```
 
-It allows you to assign the destructured variable without incurring
-any "right drift", i.e. the variable is assigned at the same indentation level
-as the code that precedes it.
+它让你在不引入"右漂移 (right drift)"的情况下完成解构后的赋值，即赋值与前面代码处于同一缩进层级。
 
-## Style
+## 风格 (Style)
 
-Both `if let` and `let/else` are idiomatic Rust constructs.\
-Use them as you see fit to improve the readability of your code,
-but don't overdo it: `match` is always there when you need it.
+`if let` 和 `let/else` 都是符合 Rust 习惯用法 (idiomatic) 的构造。\
+按你认为合适的方式使用它们来提升代码可读性，但别滥用：需要时 `match` 永远在那儿。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/05_ticket_v2/04_if_let.md)

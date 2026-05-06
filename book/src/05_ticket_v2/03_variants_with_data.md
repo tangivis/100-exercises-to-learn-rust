@@ -1,4 +1,4 @@
-# Variants can hold data
+# 变体可以携带数据 (Variants can hold data)
 
 ```rust
 enum Status {
@@ -8,18 +8,16 @@ enum Status {
 }
 ```
 
-Our `Status` enum is what's usually called a **C-style enum**.\
-Each variant is a simple label, a bit like a named constant. You can find this kind of enum in many programming
-languages, like C, C++, Java, C#, Python, etc.
+我们的 `Status` 枚举属于通常所说的 **C 风格枚举 (C-style enum)**。\
+每个变体只是一个简单的标签，类似于命名常量。这种枚举在很多编程语言中都能见到，例如 C、C++、Java、C#、Python 等。
 
-Rust enums can go further though. We can **attach data to each variant**.
+不过 Rust 的枚举可以走得更远。我们可以**为每个变体附加数据**。
 
-## Variants
+## 变体 (Variants)
 
-Let's say that we want to store the name of the person who's currently working on a ticket.\
-We would only have this information if the ticket is in progress. It wouldn't be there for a to-do ticket or
-a done ticket.
-We can model this by attaching a `String` field to the `InProgress` variant:
+假设我们想存储正在处理某张工单的人的名字。\
+只有当工单处于"进行中"时我们才会有这条信息。待办或已完成的工单不会有。
+我们可以通过给 `InProgress` 变体附加一个 `String` 字段来建模：
 
 ```rust
 enum Status {
@@ -31,21 +29,21 @@ enum Status {
 }
 ```
 
-`InProgress` is now a **struct-like variant**.\
-The syntax mirrors, in fact, the one we used to define a struct—it's just "inlined" inside the enum, as a variant.
+`InProgress` 现在是一个**类结构体变体 (struct-like variant)**。\
+事实上它的语法和我们定义结构体时一致——只是被"内联"到枚举中作为一个变体。
 
-## Accessing variant data
+## 访问变体数据 (Accessing variant data)
 
-If we try to access `assigned_to` on a `Status` instance,
+如果我们尝试在 `Status` 实例上访问 `assigned_to`：
 
 ```rust
 let status: Status = /* */;
 
-// This won't compile
+// 这无法编译
 println!("Assigned to: {}", status.assigned_to);
 ```
 
-the compiler will stop us:
+编译器会拦下我们：
 
 ```text
 error[E0609]: no field `assigned_to` on type `Status`
@@ -55,8 +53,8 @@ error[E0609]: no field `assigned_to` on type `Status`
   |                                        ^^^^^^^^^^^ unknown field
 ```
 
-`assigned_to` is **variant-specific**, it's not available on all `Status` instances.\
-To access `assigned_to`, we need to use **pattern matching**:
+`assigned_to` 是**变体特有 (variant-specific)** 的，并非所有 `Status` 实例都有它。\
+要访问 `assigned_to`，我们需要使用**模式匹配 (pattern matching)**：
 
 ```rust
 match status {
@@ -69,12 +67,11 @@ match status {
 }
 ```
 
-## Bindings
+## 绑定 (Bindings)
 
-In the match pattern `Status::InProgress { assigned_to }`, `assigned_to` is a **binding**.\
-We're **destructuring** the `Status::InProgress` variant and binding the `assigned_to` field to
-a new variable, also named `assigned_to`.\
-If we wanted, we could bind the field to a different variable name:
+在匹配模式 `Status::InProgress { assigned_to }` 中，`assigned_to` 是一个**绑定 (binding)**。\
+我们正在**解构 (destructure)** `Status::InProgress` 变体，并把 `assigned_to` 字段绑定到一个同名的新变量上。\
+如果想要，也可以把字段绑定到一个不同的变量名：
 
 ```rust
 match status {
@@ -86,3 +83,5 @@ match status {
     }
 }
 ```
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/05_ticket_v2/03_variants_with_data.md)

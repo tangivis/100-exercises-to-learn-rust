@@ -108,22 +108,22 @@
 - [x] ✅ 04_traits/14_outro.md
 
 ### 第5章：工单 v2 (Ticket v2)
-- [ ] ⏸️ 05_ticket_v2/00_intro.md
-- [ ] ⏸️ 05_ticket_v2/01_enum.md
-- [ ] ⏸️ 05_ticket_v2/02_match.md
-- [ ] ⏸️ 05_ticket_v2/03_variants_with_data.md
-- [ ] ⏸️ 05_ticket_v2/04_if_let.md
-- [ ] ⏸️ 05_ticket_v2/05_nullability.md
-- [ ] ⏸️ 05_ticket_v2/06_fallibility.md
-- [ ] ⏸️ 05_ticket_v2/07_unwrap.md
-- [ ] ⏸️ 05_ticket_v2/08_error_enums.md
-- [ ] ⏸️ 05_ticket_v2/09_error_trait.md
-- [ ] ⏸️ 05_ticket_v2/10_packages.md
-- [ ] ⏸️ 05_ticket_v2/11_dependencies.md
-- [ ] ⏸️ 05_ticket_v2/12_thiserror.md
-- [ ] ⏸️ 05_ticket_v2/13_try_from.md
-- [ ] ⏸️ 05_ticket_v2/14_source.md
-- [ ] ⏸️ 05_ticket_v2/15_outro.md
+- [x] ✅ 05_ticket_v2/00_intro.md
+- [x] ✅ 05_ticket_v2/01_enum.md
+- [x] ✅ 05_ticket_v2/02_match.md
+- [x] ✅ 05_ticket_v2/03_variants_with_data.md
+- [x] ✅ 05_ticket_v2/04_if_let.md
+- [x] ✅ 05_ticket_v2/05_nullability.md
+- [x] ✅ 05_ticket_v2/06_fallibility.md
+- [x] ✅ 05_ticket_v2/07_unwrap.md
+- [x] ✅ 05_ticket_v2/08_error_enums.md
+- [x] ✅ 05_ticket_v2/09_error_trait.md
+- [x] ✅ 05_ticket_v2/10_packages.md
+- [x] ✅ 05_ticket_v2/11_dependencies.md
+- [x] ✅ 05_ticket_v2/12_thiserror.md
+- [x] ✅ 05_ticket_v2/13_try_from.md
+- [x] ✅ 05_ticket_v2/14_source.md
+- [x] ✅ 05_ticket_v2/15_outro.md
 
 ### 第6章：工单管理 (Ticket Management)
 - [ ] ⏸️ 06_ticket_management/00_intro.md
