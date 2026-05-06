@@ -1,42 +1,44 @@
 # `.iter()`
 
-`IntoIterator` **consumes** `self` to create an iterator.
+`IntoIterator` 会**消费 (consume)** `self` 来创建迭代器。
 
-This has its benefits: you get **owned** values from the iterator.
-For example: if you call `.into_iter()` on a `Vec<Ticket>` you'll get an iterator that returns `Ticket` values.
+这有它的好处：你从迭代器拿到的是**拥有所有权 (owned)** 的值。
+例如：在 `Vec<Ticket>` 上调用 `.into_iter()` 会得到一个返回 `Ticket` 值的迭代器。
 
-That's also its downside: you can no longer use the original collection after calling `.into_iter()` on it.
-Quite often you want to iterate over a collection without consuming it, looking at **references** to the values instead.
-In the case of `Vec<Ticket>`, you'd want to iterate over `&Ticket` values.
+这也有缺点：调用 `.into_iter()` 之后你就不能再使用原集合了。
+很多时候你想在不消费集合的前提下遍历它，看到值的**引用 (reference)**。
+对 `Vec<Ticket>` 来说，你想要的是遍历 `&Ticket` 值。
 
-Most collections expose a method called `.iter()` that returns an iterator over references to the collection's elements.
-For example:
+大多数集合都暴露了一个 `.iter()` 方法，返回对集合元素引用的迭代器。
+例如：
 
 ```rust
 let numbers: Vec<u32> = vec![1, 2];
-// `n` has type `&u32` here
+// 这里 `n` 的类型是 `&u32`
 for n in numbers.iter() {
     // [...]
 }
 ```
 
-This pattern can be simplified by implementing `IntoIterator` for a **reference to the collection**.
-In our example above, that would be `&Vec<Ticket>`.\
-The standard library does this, that's why the following code works:
+这种模式可以通过为**对集合的引用**实现 `IntoIterator` 来简化。
+上面的例子中就是 `&Vec<Ticket>`。\
+标准库这样做了，所以下面的代码可以工作：
 
 ```rust
 let numbers: Vec<u32> = vec![1, 2];
-// `n` has type `&u32` here
-// We didn't have to call `.iter()` explicitly
-// It was enough to use `&numbers` in the `for` loop
+// 这里 `n` 的类型是 `&u32`
+// 我们没有显式调用 `.iter()`
+// 在 `for` 循环中使用 `&numbers` 就够了
 for n in &numbers {
     // [...]
 }
 ```
 
-It's idiomatic to provide both options:
+习惯上同时提供两种方式：
 
-- An implementation of `IntoIterator` for a reference to the collection.
-- An `.iter()` method that returns an iterator over references to the collection's elements.
+- 为对集合的引用实现 `IntoIterator`。
+- 一个返回对集合元素引用的迭代器的 `.iter()` 方法。
 
-The former is convenient in `for` loops, the latter is more explicit and can be used in other contexts.
+前者在 `for` 循环里方便，后者更显式，可以在其他场景使用。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/06_ticket_management/05_iter.md)

@@ -1,27 +1,27 @@
-# Iteration
+# 迭代 (Iteration)
 
-During the very first exercises, you learned that Rust lets you iterate over collections using `for` loops.
-We were looking at ranges at that point (e.g. `0..5`), but the same holds true for collections like arrays and vectors.
+最早的练习里，你已经了解到 Rust 允许你用 `for` 循环遍历集合。
+当时我们看的是范围（例如 `0..5`），但同样的规则也适用于像数组和向量这样的集合。
 
 ```rust
-// It works for `Vec`s
+// 适用于 `Vec`
 let v = vec![1, 2, 3];
 for n in v {
     println!("{}", n);
 }
 
-// It also works for arrays
+// 也适用于数组
 let a: [u32; 3] = [1, 2, 3];
 for n in a {
     println!("{}", n);
 }
 ```
 
-It's time to understand how this works under the hood.
+是时候了解它在底层是如何工作的了。
 
-## `for` desugaring
+## `for` 的脱糖 (`for` desugaring)
 
-Every time you write a `for` loop in Rust, the compiler _desugars_ it into the following code:
+每当你在 Rust 里写 `for` 循环时，编译器会把它 _脱糖 (desugar)_ 成下面这样的代码：
 
 ```rust
 let mut iter = IntoIterator::into_iter(v);
@@ -35,14 +35,13 @@ loop {
 }
 ```
 
-`loop` is another looping construct, on top of `for` and `while`.\
-A `loop` block will run forever, unless you explicitly `break` out of it.
+`loop` 是除 `for` 和 `while` 之外的另一种循环构造。\
+`loop` 块会无限运行，除非你显式 `break`。
 
-## `Iterator` trait
+## `Iterator` 特质 (`Iterator` trait)
 
-The `next` method in the previous code snippet comes from the `Iterator` trait.
-The `Iterator` trait is defined in Rust's standard library and provides a shared interface for
-types that can produce a sequence of values:
+前面代码片段中的 `next` 方法来自 `Iterator` 特质。
+`Iterator` 特质定义在 Rust 标准库中，为能够产生一系列值的类型提供共享接口：
 
 ```rust
 trait Iterator {
@@ -51,19 +50,17 @@ trait Iterator {
 }
 ```
 
-The `Item` associated type specifies the type of the values produced by the iterator.
+`Item` 关联类型 (associated type) 指定了迭代器产生的值的类型。
 
-`next` returns the next value in the sequence.\
-It returns `Some(value)` if there's a value to return, and `None` when there isn't.
+`next` 返回序列中的下一个值。\
+如果有值可返回则返回 `Some(value)`，没有则返回 `None`。
 
-Be careful: there is no guarantee that an iterator is exhausted when it returns `None`. That's only
-guaranteed if the iterator implements the (more restrictive)
-[`FusedIterator`](https://doc.rust-lang.org/std/iter/trait.FusedIterator.html) trait.
+注意：迭代器返回 `None` 不保证它已经耗尽。这只在迭代器实现了（更严格的）[`FusedIterator`](https://doc.rust-lang.org/std/iter/trait.FusedIterator.html) 特质时才能保证。
 
-## `IntoIterator` trait
+## `IntoIterator` 特质 (`IntoIterator` trait)
 
-Not all types implement `Iterator`, but many can be converted into a type that does.\
-That's where the `IntoIterator` trait comes in:
+并不是所有类型都实现了 `Iterator`，但很多类型可以转换成实现了 `Iterator` 的类型。\
+这就是 `IntoIterator` 特质的用武之地：
 
 ```rust
 trait IntoIterator {
@@ -73,18 +70,18 @@ trait IntoIterator {
 }
 ```
 
-The `into_iter` method consumes the original value and returns an iterator over its elements.\
-A type can only have one implementation of `IntoIterator`: there can be no ambiguity as to what `for` should desugar to.
+`into_iter` 方法消费原值，返回它的元素上的迭代器。\
+一个类型只能有一个 `IntoIterator` 实现：`for` 该脱糖成什么不能有歧义。
 
-One detail: every type that implements `Iterator` automatically implements `IntoIterator` as well.
-They just return themselves from `into_iter`!
+一个细节：每个实现了 `Iterator` 的类型也自动实现了 `IntoIterator`。
+它们的 `into_iter` 直接返回自身！
 
-## Bounds checks
+## 边界检查 (Bounds checks)
 
-Iterating over iterators has a nice side effect: you can't go out of bounds, by design.\
-This allows Rust to remove bounds checks from the generated machine code, making iteration faster.
+迭代有一个不错的副作用：按设计你不会越界。\
+这允许 Rust 在生成的机器码中去掉边界检查，使迭代更快。
 
-In other words,
+换句话说，
 
 ```rust
 let v = vec![1, 2, 3];
@@ -93,7 +90,7 @@ for n in v {
 }
 ```
 
-is usually faster than
+通常比
 
 ```rust
 let v = vec![1, 2, 3];
@@ -102,6 +99,8 @@ for i in 0..v.len() {
 }
 ```
 
-There are exceptions to this rule: the compiler can sometimes prove that you're not going out of bounds even
-with manual indexing, thus removing the bounds checks anyway. But in general, prefer iteration to indexing
-where possible.
+更快。
+
+这条规则有例外：编译器有时能证明你没有越界，即使是手动索引也能去掉边界检查。但总的来说，能用迭代就别用索引。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/06_ticket_management/04_iterators.md)
