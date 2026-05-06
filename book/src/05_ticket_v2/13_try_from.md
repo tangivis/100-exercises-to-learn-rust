@@ -1,15 +1,14 @@
-# `TryFrom` and `TryInto`
+# `TryFrom` 与 `TryInto`
 
-In the previous chapter we looked at the [`From` and `Into` traits](../04_traits/09_from.md),
-Rust's idiomatic interfaces for **infallible** type conversions.\
-But what if the conversion is not guaranteed to succeed?
+上一章我们看过 [`From` 与 `Into` 特质](../04_traits/09_from.md)——
+Rust 中处理**不会失败 (infallible)** 类型转换的习惯接口。\
+但如果转换不一定成功呢？
 
-We now know enough about errors to discuss the **fallible** counterparts of `From` and `Into`:
-`TryFrom` and `TryInto`.
+我们对错误已经了解得够多，可以来看 `From` 与 `Into` 的**可能失败 (fallible)** 对应特质：`TryFrom` 与 `TryInto`。
 
-## `TryFrom` and `TryInto`
+## `TryFrom` 与 `TryInto`
 
-Both `TryFrom` and `TryInto` are defined in the `std::convert` module, just like `From` and `Into`.
+`TryFrom` 与 `TryInto` 都定义在 `std::convert` 模块下，跟 `From`、`Into` 一样：
 
 ```rust
 pub trait TryFrom<T>: Sized {
@@ -23,18 +22,19 @@ pub trait TryInto<T>: Sized {
 }
 ```
 
-The main difference between `From`/`Into` and `TryFrom`/`TryInto` is that the latter return a `Result` type.\
-This allows the conversion to fail, returning an error instead of panicking.
+`From`/`Into` 与 `TryFrom`/`TryInto` 的主要区别在于后者返回 `Result` 类型。\
+这允许转换失败，返回错误而不是 panic。
 
 ## `Self::Error`
 
-Both `TryFrom` and `TryInto` have an associated `Error` type.
-This allows each implementation to specify its own error type, ideally the most appropriate for the conversion
-being attempted.
+`TryFrom` 与 `TryInto` 都有一个关联类型 `Error`。
+这允许每个实现指定自己的错误类型，理想情况下选择最适合该转换的错误类型。
 
-`Self::Error` is a way to refer to the `Error` associated type defined in the trait itself.
+`Self::Error` 是一种引用特质本身定义的关联类型 `Error` 的方式。
 
-## Duality
+## 对偶性 (Duality)
 
-Just like `From` and `Into`, `TryFrom` and `TryInto` are dual traits.\
-If you implement `TryFrom` for a type, you get `TryInto` for free.
+跟 `From` 与 `Into` 一样，`TryFrom` 与 `TryInto` 是对偶特质。\
+如果你为某个类型实现了 `TryFrom`，就免费得到 `TryInto`。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/05_ticket_v2/13_try_from.md)

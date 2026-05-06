@@ -1,38 +1,31 @@
-# Error trait
+# Error 特质 (Error trait)
 
-## Error reporting
+## 错误报告 (Error reporting)
 
-In the previous exercise you had to destructure the `TitleError` variant to extract the error message and
-pass it to the `panic!` macro.\
-This is a (rudimentary) example of **error reporting**: transforming an error type into a representation that can be
-shown to a user, a service operator, or a developer.
+在前一个练习中，你需要解构 `TitleError` 变体来取出错误消息，并把它传给 `panic!` 宏。\
+这是一个（粗糙的）**错误报告 (error reporting)** 例子：把错误类型转换成可以呈现给用户、运维人员或开发者的表示。
 
-It's not practical for each Rust developer to come up with their own error reporting strategy: it'd be a waste of time
-and it wouldn't compose well across projects.
-That's why Rust provides the `std::error::Error` trait.
+让每个 Rust 开发者都各自琢磨一套错误报告策略并不实际：既浪费时间、跨项目时也不能很好地组合。
+所以 Rust 提供了 `std::error::Error` 特质。
 
-## The `Error` trait
+## `Error` 特质 (The `Error` trait)
 
-There are no constraints on the type of the `Err` variant in a `Result`, but it's a good practice to use a type
-that implements the `Error` trait.
-`Error` is the cornerstone of Rust's error handling story:
+`Result` 中 `Err` 变体的类型没有限制，但好的实践是使用一个实现了 `Error` 特质的类型。
+`Error` 是 Rust 错误处理体系的基石：
 
 ```rust
-// Slightly simplified definition of the `Error` trait
+// `Error` 特质的略简化定义
 pub trait Error: Debug + Display {}
 ```
 
-You might recall the `:` syntax from [the `From` trait](../04_traits/09_from.md#supertrait--subtrait)—it's used to specify **supertraits**.
-For `Error`, there are two supertraits: `Debug` and `Display`. If a type wants to implement `Error`, it must also
-implement `Debug` and `Display`.
+你可能还记得来自 [`From` 特质](../04_traits/09_from.md#父特质--子特质-supertrait--subtrait) 的 `:` 语法——它用来指定**父特质 (supertrait)**。
+对 `Error` 来说，父特质有两个：`Debug` 和 `Display`。一个类型若想实现 `Error`，就也必须实现 `Debug` 和 `Display`。
 
-## `Display` and `Debug`
+## `Display` 与 `Debug`
 
-We've already encountered the `Debug` trait in [a previous exercise](../04_traits/04_derive.md)—it's the trait used by
-`assert_eq!` to display the values of the variables it's comparing when the assertion fails.
+我们[在前一个练习中](../04_traits/04_derive.md)已经接触过 `Debug` 特质——`assert_eq!` 在断言失败时用它来显示比较的变量值。
 
-From a "mechanical" perspective, `Display` and `Debug` are identical—they encode how a type should be converted
-into a string-like representation:
+从"机制"上讲，`Display` 与 `Debug` 是相同的——它们编码了一个类型应该怎么转换为类似字符串的表示：
 
 ```rust
 // `Debug`
@@ -46,7 +39,8 @@ pub trait Display {
 }
 ```
 
-The difference is in their _purpose_: `Display` returns a representation that's meant for "end-users",
-while `Debug` provides a low-level representation that's more suitable to developers and service operators.\
-That's why `Debug` can be automatically implemented using the `#[derive(Debug)]` attribute, while `Display`
-**requires** a manual implementation.
+差别在于 _目的_：`Display` 返回面向"终端用户 (end-users)"的表示，
+而 `Debug` 提供更适合开发者和运维的低层表示。\
+这就是为什么 `Debug` 可以用 `#[derive(Debug)]` 属性自动实现，而 `Display` 则**必须**手动实现。
+
+> 原文链接：[英文原文](https://github.com/mainmatter/100-exercises-to-learn-rust/blob/main/book/src/05_ticket_v2/09_error_trait.md)
